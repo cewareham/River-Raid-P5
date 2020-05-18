@@ -12,7 +12,7 @@ class Game {
     }
   
     render() {
-        background(clr[3]);     // river->blue
+        background(clr[3]);     // river -> blue
     }
 
     centerCanvas() {
