@@ -30,6 +30,11 @@
 class Background {
     constructor(imgs, horizontalTiles = true) {
         this.imgs = imgs;
+        this.lastLevel = 2;
+        this.maxLevel = 11;
+        this.levelName = "assets/lvl";
+        this.levelExt = ".png";
+        console.log(this.imgs[0]);
         this.color = color('black');
         this.render = this.nullRender;
         this.horizontalTiles = horizontalTiles;
@@ -119,7 +124,12 @@ class Background {
     update = () => {
         if (this.stagePosY < -this.numImgs*this.tileHeight-height && !this.calledLoadImage) {
              this.render = this.nullRender;
-             this.tiles[0][0] = loadImage('assets/lvl03.png', this.newLevelLoaded);
+
+             this.lastLevel++;
+             if (this.lastLevel > this.maxLevel) this.lastLevel = 2;    // warp around to start
+             console.log("Level " + this.lastLevel + " loaded");
+             let path = this.levelName + String(this.lastLevel).padStart(3, '0') + this.levelExt;
+             this.tiles[0][0] = loadImage(path, this.newLevelLoaded);
              this.calledLoadImage = true;
         }
     }

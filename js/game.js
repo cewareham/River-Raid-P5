@@ -6,7 +6,7 @@ class Game {
         this.canvas = canvas;
         this.centerCanvas();
         //this.bg = new BackgroundVerticalScroll([CC.lvl01, CC.lvl02, CC.lvl01, CC.lvl03], 0);
-        this.bg = new Background(['assets/lvl02.png', 'assets/lvl01.png'], false);
+        this.bg = new Background(['assets/lvl002.png', 'assets/lvl001.png'], false);
         //this.bg.stagePosY = -height;
 }
   
