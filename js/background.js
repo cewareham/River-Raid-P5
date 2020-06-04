@@ -31,10 +31,11 @@ class Background {
 	constructor(imgs, horizontalTiles = true) {
 		this.imgs = imgs;
 		this.lastLevel = 2;
-		this.maxLevel = 11;
+		this.repeatLevel = 2;
+		this.maxLevel = Math.floor(CC.houseData.length/2) + 1;
 		this.levelName = "assets/lvl";
 		this.levelExt = ".png";
-		console.log(this.imgs[0]);
+		//console.log(this.imgs[0]);
 		this.color = color('black');
 		this.render = this.nullRender;
 		this.horizontalTiles = horizontalTiles;
@@ -42,9 +43,10 @@ class Background {
 
 		this.top = 0;                   // stagePosY y-coord to display top of image @ top of canvas
 		this.bottom = -height;          // stagePosY y-coord to display bottom of image @ bottom of canvas
-		this.stagePosY = this.bottom;   // initial pos -> bottom of image @ bottom of canvas
-		this.stagePosX = 0;
+		// this.stagePosY = this.bottom;   // initial pos -> bottom of image @ bottom of canvas
+		// this.stagePosX = 0;
 		this.calledLoadImage = false;
+		this.repeatLevelDone = false;
 
 		this.setTiles(this.imgs);
 	}
@@ -94,6 +96,8 @@ class Background {
 		this.tileHeight = this.tiles[0][0].height;
 		this.numLoaded++;
 		if (this.numLoaded == this.numImgs) {
+			this.stagePosY = this.bottom;   // initial pos -> bottom of image @ bottom of canvas
+			this.stagePosX = 0;
 			this.scroll(0, 0);              // display initial image
 			this.render = this.realRender;  // start rendering
 		}
@@ -122,23 +126,50 @@ class Background {
 	}
 
 	update = () => {
-		// load new level image if prev one is offscreen (except for repeating level 1)
+		// 1st (repeated) level off screen -> load new house data
+		if (this.stagePosY < -this.tileHeight-height && !this.repeatLevelDone) {
+			// don't go beyond CC.houseData array bounds
+			if (this.repeatLevel < CC.houseData.length) {
+				let idx1 = this.repeatLevel-1;	// non-repeated level
+				let idx2 = this.repeatLevel;	// repeated level
+				game.makeHouses(idx1, idx2);	// load house info for both levels because we need array init
+				console.log("*** NEW LEVEL repeatLevel makeHouses()->", idx1, idx2, -this.tileHeight-height, this.stagePosY);
+				//game.replaceHouses(this.repeatLevel);
+				this.repeatLevel++;				// next level index into houseData
+			} else {	// this.repeatLevel >= CC.houseData.length -> wrap around to start for house data
+				game.makeHouses(CC.houseData.length-1, 0);
+				this.repeatLevel = 1;
+			 	console.log('!!! WRAPPING AROUND repeatLevel = !!!', this.repeatLevel);
+			}
+			this.repeatLevelDone = true;	// set flag so we don't do again until next level loaded
+		}
+		// 2nd (non-repeated) level off screen -> load new level image & house data (in newLevelLoaded())
 		if (this.stagePosY < -this.numImgs*this.tileHeight-height && !this.calledLoadImage) {
 				this.render = this.nullRender; // stop rendering until new image loaded
 
 				this.lastLevel++;
-				if (this.lastLevel > this.maxLevel) this.lastLevel = 2;    // warp around to start
-				console.log("Level " + this.lastLevel + " loaded");
+				if (this.lastLevel > this.maxLevel) {
+					this.lastLevel = 2;		// wrap around to start for loading images
+				}
 				let path = this.levelName + String(this.lastLevel).padStart(3, '0') + this.levelExt;
+				console.log("Level " + this.lastLevel + " loaded->", path);
 				this.tiles[0][0] = loadImage(path, this.newLevelLoaded);
-				this.calledLoadImage = true;
+
+				this.stagePosY += this.numImgs*(this.tileHeight);  // reset new level image position
+				this.calledLoadImage = true;	// set to true so this code-block does not execute again until image loaded
+				this.repeatLevelDone = false;	// set to false so 1st-level-offscreen code (above) executes
 		}
 	}
 
 	newLevelLoaded = () => {
-		this.stagePosY += this.numImgs*(this.tileHeight);  // reset new level image position
-		this.calledLoadImage = false;      // flag so we don't load image more than once
-		this.render = this.realRender;     // new level loaded & in place->restart rendering
+		console.log("newLevelLoaded() this.stagePosY=", this.stagePosY);
+
+		game.makeHouses(this.repeatLevel-1, this.repeatLevel);
+		this.repeatLevel++;
+
+		this.calledLoadImage = false;		// flag so we don't load image more than once
+		this.repeatLevelDone = false;		// set flag so we don't do again until next level loaded
+		this.render = this.realRender;		// new level loaded & in place->restart rendering
 	}
 
 	// call the do-nothing render until all

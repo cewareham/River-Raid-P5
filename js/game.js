@@ -6,19 +6,33 @@ class Game {
 		this.canvas = canvas;
 		this.centerCanvas();
 		this.bg = new Background(['assets/lvl002.png', 'assets/lvl001.png'], false);
-		this.makeHouses();      // make houses with trees
+		this.houses= [];
+		this.level = 0;
+		this.makeHouses(this.level, this.level+1);	// make level 1 houses/trees
 		this.scrollSpeed = 5;
+		this.housesMade = false;
+	}
+
+	replaceHouses = (idx) => {
+		this.houses.splice(0, CC.houseData[idx-2].length)	// keep previous house data
+		this.newHouses(idx, 1);								// add new house data
+	}
+
+	makeHouses = (idx1, idx2) => {
+		this.houses = [];
+		this.newHouses(idx1, 0);		// make level 1 houses/trees
+		this.newHouses(idx2, 1);		// make level 2 houses/trees
 	}
   
-	makeHouses = () => {
-		this.houses = [];
-		let hd = CC.houseData;
+	newHouses = (idx, offset) => {
+		let hd = CC.houseData[idx];
 		for (let ii=0; ii<hd.length; ii++) {
 			let obj = hd[ii];
 			let xx = obj.x;
-			let yy = obj.y;
-			let img = (obj.img == "left" ? CC.houseLeft : CC.houseRight);
-			this.houses.push(new House(xx, yy, img.width, img.height, img));
+			let yy = obj.y
+			if (offset) yy -= offset*CC.tileHeight;
+			let img = (obj.img == "L" ? CC.houseLeft : CC.houseRight);
+			this.houses.push(new House(xx, yy, img.width, img.height, img, ii));
 		}
 	}
 
