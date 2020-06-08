@@ -7,10 +7,26 @@ class Game {
 		this.centerCanvas();
 		this.bg = new Background(['assets/lvl002.png', 'assets/lvl001.png'], false);
 		this.houses= [];
+		this.bridges = [];
 		this.level = 0;
 		this.makeHouses(this.level, this.level+1);	// make level 1 houses/trees
-		this.scrollSpeed = 5;
-		this.housesMade = false;
+		this.makeBridges(0, 1);	// make level 1 bridges
+		this.scrollSpeed = this.bg.scrollSpeed;
+	}
+
+	makeBridges = (offset1, offset2) => {
+		this.bridges = [];
+		this.newBridge(offset1);
+		this.newBridge(offset2);
+	}
+
+	newBridge = (offset) => {
+		let bd = CC.bridgeData;
+		let xx = bd.x;
+		let yy = bd.y;
+		if (offset) yy -= offset*CC.tileHeight;
+		let img = CC.bridge;
+		this.bridges.push(new Bridge(xx, yy, img.width, img.height, img, offset));
 	}
 
 	replaceHouses = (idx) => {
@@ -29,7 +45,7 @@ class Game {
 		for (let ii=0; ii<hd.length; ii++) {
 			let obj = hd[ii];
 			let xx = obj.x;
-			let yy = obj.y
+			let yy = obj.y;
 			if (offset) yy -= offset*CC.tileHeight;
 			let img = (obj.img == "L" ? CC.houseLeft : CC.houseRight);
 			this.houses.push(new House(xx, yy, img.width, img.height, img, ii));
@@ -38,6 +54,13 @@ class Game {
 
 	update() {
 		this.bg.update();
+	}
+
+	renderBridges = (dy) => {
+		for (let ii=0; ii<this.bridges.length; ii++) {
+			this.bridges[ii].update(dy);
+			this.bridges[ii].render();
+		}
 	}
 
 	renderHouses = (dy) => {
@@ -51,12 +74,17 @@ class Game {
 		if (keyIsDown(DOWN_ARROW)) {
 			this.bg.render(-this.scrollSpeed);
 			this.renderHouses(-this.scrollSpeed);
+			this.renderBridges(-this.scrollSpeed);
 		}
 		else if (keyIsDown(UP_ARROW)) {
 			this.bg.render(this.scrollSpeed);
 			this.renderHouses(this.scrollSpeed);
+			this.renderBridges(this.scrollSpeed);
 		}
-		else this.renderHouses(0);
+		else {
+			this.renderHouses(0);
+			this.renderBridges(0);
+		}
 	}
 
 	centerCanvas() {

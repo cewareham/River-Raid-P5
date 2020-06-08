@@ -35,8 +35,8 @@ class Background {
 		this.maxLevel = Math.floor(CC.houseData.length/2) + 1;
 		this.levelName = "assets/lvl";
 		this.levelExt = ".png";
-		//console.log(this.imgs[0]);
 		this.color = color('black');
+		this.update = this.nullUpdate;
 		this.render = this.nullRender;
 		this.horizontalTiles = horizontalTiles;
 		this.scrollSpeed = 5;           // scrolling speed
@@ -47,13 +47,17 @@ class Background {
 		// this.stagePosX = 0;
 		this.calledLoadImage = false;
 		this.repeatLevelDone = false;
+		// diff between bottom of screen & top of bridge MUST be bridgeDelta
+		// used below to correct screen shift
+		this.bridgDelta = CC.tileHeight - CC.bridgeData.y;
 
 		this.setTiles(this.imgs);
 	}
 
 	setTiles = (tiles) => {
 		this.numLoaded = 0;                 // no imgs loaded yet
-		this.render = this.nullRender;      // pause rendering until imgs loaded
+		//this.render = this.nullRender;      // pause rendering until imgs loaded
+		this.updateRenderOff();
 		if (typeof tiles === 'string') {    // img=single path/filename string
 			this.numImgs = 1;
 			this.tiles = [[loadImage(tiles, this.tilesLoaded)]];
@@ -99,7 +103,8 @@ class Background {
 			this.stagePosY = this.bottom;   // initial pos -> bottom of image @ bottom of canvas
 			this.stagePosX = 0;
 			this.scroll(0, 0);              // display initial image
-			this.render = this.realRender;  // start rendering
+			//this.render = this.realRender;  // start rendering
+			this.updateRenderOn();
 		}
 	}
 
@@ -125,7 +130,14 @@ class Background {
 		image(this.tiles[row2][col2], xOff + this.tileWidth, yOff + this.tileHeight);
 	}
 
-	update = () => {
+	realUpdate = () => {
+		// hack to correct screen shift when loading new level from disk-won't work putting it below!
+		let mapBottomScreenY = this.stagePosY,
+			bridgeScreenCoord = game.bridges[0].screenCoord,
+			delta = Math.abs(this.bridgDelta-Math.abs(Math.abs(mapBottomScreenY) - Math.abs(bridgeScreenCoord)));
+		//if (delta < this.bridgDelta && delta != 0) game.bridges[0].yy -= delta;
+		if (delta < this.bridgDelta) this.stagePosY -= delta;	// adjust screen shift
+
 		// 1st (repeated) level off screen -> load new house data
 		if (this.stagePosY < -this.tileHeight-height && !this.repeatLevelDone) {
 			// don't go beyond CC.houseData array bounds
@@ -133,7 +145,8 @@ class Background {
 				let idx1 = this.repeatLevel-1;	// non-repeated level
 				let idx2 = this.repeatLevel;	// repeated level
 				game.makeHouses(idx1, idx2);	// load house info for both levels because we need array init
-				console.log("*** NEW LEVEL repeatLevel makeHouses()->", idx1, idx2, -this.tileHeight-height, this.stagePosY);
+				console.log("*** NEW LEVEL repeatLevel makeHouses()");
+				console.log("\n");
 				//game.replaceHouses(this.repeatLevel);
 				this.repeatLevel++;				// next level index into houseData
 			} else {	// this.repeatLevel >= CC.houseData.length -> wrap around to start for house data
@@ -141,40 +154,55 @@ class Background {
 				this.repeatLevel = 1;
 			 	console.log('!!! WRAPPING AROUND repeatLevel = !!!', this.repeatLevel);
 			}
+			game.bridges[0].yy -= this.numImgs*CC.tileHeight;
 			this.repeatLevelDone = true;	// set flag so we don't do again until next level loaded
 		}
 		// 2nd (non-repeated) level off screen -> load new level image & house data (in newLevelLoaded())
 		if (this.stagePosY < -this.numImgs*this.tileHeight-height && !this.calledLoadImage) {
-				this.render = this.nullRender; // stop rendering until new image loaded
+				//this.render = this.nullRender; // stop rendering until new image loaded
+				this.updateRenderOff();
 
 				this.lastLevel++;
 				if (this.lastLevel > this.maxLevel) {
 					this.lastLevel = 2;		// wrap around to start for loading images
 				}
 				let path = this.levelName + String(this.lastLevel).padStart(3, '0') + this.levelExt;
-				console.log("Level " + this.lastLevel + " loaded->", path);
+				console.log("Map " + this.lastLevel + " loaded->", path);
 				this.tiles[0][0] = loadImage(path, this.newLevelLoaded);
 
+				//this.stagePosY = this.bottom;
 				this.stagePosY += this.numImgs*(this.tileHeight);  // reset new level image position
+		
 				this.calledLoadImage = true;	// set to true so this code-block does not execute again until image loaded
 				this.repeatLevelDone = false;	// set to false so 1st-level-offscreen code (above) executes
 		}
 	}
 
 	newLevelLoaded = () => {
-		console.log("newLevelLoaded() this.stagePosY=", this.stagePosY);
-
 		game.makeHouses(this.repeatLevel-1, this.repeatLevel);
+		game.bridges[1].yy -= this.numImgs*CC.tileHeight;
 		this.repeatLevel++;
 
 		this.calledLoadImage = false;		// flag so we don't load image more than once
 		this.repeatLevelDone = false;		// set flag so we don't do again until next level loaded
-		this.render = this.realRender;		// new level loaded & in place->restart rendering
+		this.updateRenderOn();
+	}
+
+	updateRenderOff = () => {
+		this.update = this.nullUpdate;
+		this.render = this.nullRender;
+	}
+
+	updateRenderOn = () => {
+		this.update = this.realUpdate;
+		this.render = this.realRender;
 	}
 
 	// call the do-nothing render until all
 	//  image(s) loaded then call realRender
 	nullRender() {}
+
+	nullUpdate() {}
 
 	realRender = (dy) => {
 		this.scroll(0, dy);

@@ -6,6 +6,8 @@
  15-tree, 16-trunk), (17-support, 18-board1- 19-board2, (1-banner),(13-shot))
 */
 
+// final name for game: #1-River Blitz, #2-River Assault or #3-Stream Attack
+
 //             0          1         2           3          4          5          6         7
 let clr = ['#000000', '#E8E84A', '#6E9C42', '#2D32B8', '#D2A44A', '#004030', '#000089', '#000000',
     //         8          9          10        11         12         13          14        15   
@@ -16,6 +18,8 @@ let clr = ['#000000', '#E8E84A', '#6E9C42', '#2D32B8', '#D2A44A', '#004030', '#0
 let KEY_P = 80;
 
 let CC = {
+	bridgeData: {x: 295, y: 2629},
+
 	houseData: [
 		[	{x: 591, y:  275, img: "L"},	//idx 0 level 1->terrain/islands repeat->lvl001.png
 			{x: 631, y:  528, img: "R"},	// 10x
@@ -37,7 +41,7 @@ let CC = {
 			{x: 633, y: 2381, img: "R"},
 			{x: 611, y: 2550, img: "R"}],
 
-		[	{x: 633, y:  107, img: "R"},	//idx 2 level 3->terrain/islands repeat->lvl001.png
+		[	{x: 633, y:  107, img: "R"},	//idx 2 level 3->terrain repeat->lvl001.png
 			{x:  11, y:  611, img: "R"},	// 6x
 			{x:  53, y: 2045, img: "L"},
 			{x: 648, y: 2297, img: "L"},
@@ -55,7 +59,7 @@ let CC = {
 			{x: 633, y: 2381, img: "R"},
 			{x: 628, y: 2548, img: "L"}],
 
-		[	{x: 643, y:  697, img: "L"},	//idx 4 level 5->terrain/islands repeat->lvl001.png
+		[	{x: 643, y:  697, img: "L"},	//idx 4 level 5->terrain repeat->lvl001.png
 			{x: 658, y:  949, img: "R"},	// 6x
 			{x: 669, y: 1115, img: "L"},
 			{x:  90, y: 1539, img: "L"},
@@ -72,7 +76,7 @@ let CC = {
 			{x: 333, y: 1792, img: "R"},
 			{x:   0, y: 2551, img: "L"}],
 
-		[	{x:   7, y:  527, img: "L"},	//idx 6 level 7->terrain/islands repeat->lvl001.png
+		[	{x:   7, y:  527, img: "L"},	//idx 6 level 7->terrain repeat->lvl001.png
 			{x: 580, y:  610, img: "R"},	// 7x
 			{x: 644, y:  779, img: "L"},
 			{x:  79, y:  863, img: "R"},
@@ -86,7 +90,7 @@ let CC = {
 			{x: 333, y: 2039, img: "R"},
 			{x:  11, y: 2548, img: "L"}],
 
-		[	{x: 596, y:  105, img: "L"},	//idx 8 level 9->terrain/islands repeat->lvl001.png
+		[	{x: 596, y:  105, img: "L"},	//idx 8 level 9->terrain repeat->lvl001.png
 			{x: 633, y:  358, img: "L"},	// 8x
 			{x: 652, y:  526, img: "L"},
 			{x: 657, y:  610, img: "R"},
@@ -102,7 +106,7 @@ let CC = {
 			{x: 333, y: 1203, img: "R"},
 			{x: 570, y: 2550, img: "L"}],
 		
-		[	{x:  40, y:  107, img: "L"},	//idx 10 level 11->terrain/islands repeat->lvl001.png
+		[	{x:  40, y:  107, img: "L"},	//idx 10 level 11->terrain repeat->lvl001.png
 			{x:  20, y:  192, img: "L"},	// 8x
 			{x:  25, y: 1034, img: "L"},
 			{x:  13, y: 1118, img: "R"},
@@ -111,14 +115,14 @@ let CC = {
 			{x: 608, y: 2381, img: "R"},
 			{x: 646, y: 2550, img: "R"}],
 
-		[	{x: 570, y: 1363, img: "L"},	//idx 11 level 12->terrain/islands repeat->lvl007.png
+		[	{x: 570, y: 1363, img: "L"},	//idx 11 level 12->lvl007.png
 			{x: 549, y: 1448, img: "L"},	// 6x
 			{x: 549, y: 1867, img: "R"},
 			{x: 27, y: 2372, img: "L"},
 			{x: 74, y: 2457, img: "R"},
 			{x: 74, y: 2541, img: "R"}],
 
-		[	{x: 43, y: 351, img: "R"},		//idx 12 level 13->terrain/islands repeat->lvl001.png
+		[	{x: 43, y: 351, img: "R"},		//idx 12 level 13->terrain repeat->lvl001.png
 			{x: 58, y: 1023, img: "R"},		// 7x
 			{x: 12, y: 1952, img: "R"},
 			{x: 579, y: 2119, img: "L"},
@@ -126,14 +130,14 @@ let CC = {
 			{x: 74, y: 2458, img: "L"},
 			{x: 38, y: 2542, img: "R"}],
 
-		[	{x: 333, y: 1026, img: "L"},	//idx 13 level 14->terrain/islands repeat->lvl008.png
+		[	{x: 333, y: 1026, img: "L"},	//idx 13 level 14->lvl008.png
 			{x: 333, y: 1195, img: "L"},	// 6x
 			{x: 333, y: 1279, img: "L"},
 			{x: 333, y: 1699, img: "R"},
 			{x: 333, y: 2121, img: "L"},
 			{x: 712, y: 2541, img: "L"}],
 
-		[	{x: 591, y: 358, img: "L"},		//idx 14 level 15->terrain/islands repeat->lvl001.png
+		[	{x: 591, y: 358, img: "L"},		//idx 14 level 15->terrain repeat->lvl001.png
 			{x: 657, y: 778, img: "L"},		// 7x
 			{x: 617, y: 947, img: "R"},
 			{x: 607, y: 1956, img: "L"},
@@ -141,7 +145,7 @@ let CC = {
 			{x: 606, y: 2126, img: "R"},
 			{x: 595, y: 2548, img: "R"}],
 
-		[	{x: 548, y: 100, img: "R"},		//idx 15 level 16->terrain/islands repeat->lvl009.png
+		[	{x: 548, y: 100, img: "R"},		//idx 15 level 16->lvl009.png
 			{x: 654, y: 690, img: "R"},		// 7x
 			{x: 332, y: 1110, img: "L"},
 			{x: 332, y: 1195, img: "R"},
@@ -149,7 +153,7 @@ let CC = {
 			{x: 712, y: 2034, img: "R"},
 			{x: 75, y: 2542, img: "L"}],
 
-		[	{x: 591, y:  183, img: "L"},	//idx 16 level 17->terrain/islands repeat->lvl001.png
+		[	{x: 591, y:  183, img: "L"},	//idx 16 level 17->terrain repeat->lvl001.png
 			{x:  53, y:  268, img: "R"},	// 9x
 			{x: 632, y:  436, img: "L"},
 			{x:  75, y:  521, img: "R"},
@@ -159,13 +163,13 @@ let CC = {
 			{x: 649, y: 2374, img: "L"},
 			{x: 659, y: 2541, img: "L"}],
 
-		[	{x:   0, y:  868, img: "L"},	//idx 17 level 18->terrain/islands repeat->lvl010.png
+		[	{x:   0, y:  868, img: "L"},	//idx 17 level 18->lvl010.png
 			{x: 612, y:  953, img: "L"},	// 5x
 			{x: 612, y: 1037, img: "R"},
 			{x:  54, y: 1206, img: "R"},
 			{x: 569, y: 2553, img: "R"}],
 
-		[	{x: 623, y:  863, img: "R"},	//idx 18 level 19->terrain/islands repeat->lvl001.png
+		[	{x: 623, y:  863, img: "R"},	//idx 18 level 19->terrain repeat->lvl001.png
 			{x: 654, y: 1031, img: "R"},	// 6x
 			{x: 617, y: 1199, img: "L"},
 			{x: 622, y: 2294, img: "R"},
@@ -173,7 +177,7 @@ let CC = {
 			{x:  85, y: 2547, img: "L"}],
 
 
-		[	{x: 75, y:  184, img: "R"},		//idx 19 level 20->terrain/islands repeat->lvl011.png
+		[	{x: 75, y:  184, img: "R"},		//idx 19 level 20->lvl011.png
 			{x: 28, y:  522, img: "L"},		// 5x
 			{x: 28, y:  605, img: "R"},
 			{x: 96, y: 2458, img: "L"},

@@ -6,11 +6,18 @@ function preload() {
 	// CC object in constants.js
 	CC.houseLeft = loadImage('assets/houseLeft.png');
 	CC.houseRight = loadImage('assets/houseRight.png');
-	CC.lvl01 = loadImage('assets/lvl001.png')
+	CC.lvl01 = loadImage('assets/lvl001.png');
+	CC.bridge = loadImage('assets/bridge.png');
 }
 
 function setup() {
-	CC.tileHeight = CC.lvl01.height;
+	// console.log(typeof CC.houseLeft);							// result -> 'object'
+	// console.log(CC.houseLeft instanceof HTMLCanvasElement);		// result -> false
+	// console.log(CC.houseLeft instanceof HTMLImageElement);		// result -> false
+	// console.log(CC.houseLeft);
+	// console.log('pixels' in CC.houseLeft);	// result -> true p5.js loadImage(..) returns a P5.Image object that has pixels field
+
+	CC.tileHeight = CC.lvl01.height;		// all images should be same height
 	let canvas = createCanvas(800, 600);
 	game = new Game(canvas);
 }
