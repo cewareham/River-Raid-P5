@@ -12,10 +12,10 @@ class House {
 		this.dHeight = height - CC.tileHeight;
 	}
 
-	// is house y-coord (screenCoord) on visible canvas?
+	// is house y-coord on visible canvas?
 	onScreen = () => {
-		this.screenCoord = this.dHeight + this.yy;
-		return (this.screenCoord < height && this.screenCoord > -this.shape.height);
+		this.screenY = this.dHeight + this.yy;
+		return (this.screenY < height && this.screenY > -this.shape.height);
 	}
 
 	update = (dy) => {
@@ -23,8 +23,8 @@ class House {
 	}
 
 	render = () => {
-		// this.screenCoord = this.dHeight + this.yy;
+		// this.screenY = this.dHeight + this.yy;
 		if (this.onScreen())
-			image(this.shape, this.xx, this.screenCoord);
+			image(this.shape, this.xx, this.screenY);
 	}
 }

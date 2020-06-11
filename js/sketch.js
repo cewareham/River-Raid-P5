@@ -8,6 +8,8 @@ function preload() {
 	CC.houseRight = loadImage('assets/houseRight.png');
 	CC.lvl01 = loadImage('assets/lvl001.png');
 	CC.bridge = loadImage('assets/bridge.png');
+	CC.bridgeEx1 = loadImage('assets/bridgeEx1.png');
+	CC.bridgeEx2 = loadImage('assets/bridgeEx2.png');
 }
 
 function setup() {
@@ -17,7 +19,7 @@ function setup() {
 	// console.log(CC.houseLeft);
 	// console.log('pixels' in CC.houseLeft);	// result -> true p5.js loadImage(..) returns a P5.Image object that has pixels field
 
-	CC.tileHeight = CC.lvl01.height;		// all images should be same height
+	CC.tileHeight = CC.lvl01.height;		// all map images should be same height
 	let canvas = createCanvas(800, 600);
 	game = new Game(canvas);
 }

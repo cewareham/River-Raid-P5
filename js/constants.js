@@ -1,24 +1,110 @@
 "use strict";
 
-/*
- 0-null, 1-airplane, 2-bottom, 3-water, (4-propeller, 5-body, 6-middle), (7-cabin, 8-deck, 9-hull),
-(10-base, 11-asphalt, (1-banner), (12-fuel, 13-white), 14-panel, (1)-letters, ((13-Wall),
- 15-tree, 16-trunk), (17-support, 18-board1- 19-board2, (1-banner),(13-shot))
-*/
 
 // final name for game: #1-River Blitz, #2-River Assault or #3-Stream Attack
 
-//             0          1         2           3          4          5          6         7
-let clr = ['#000000', '#E8E84A', '#6E9C42', '#2D32B8', '#D2A44A', '#004030', '#000089', '#000000',
-    //         8          9          10        11         12         13          14        15   
-           '#A33915', '#54A0C5', '#6F6F6F', '#AAAAAA', '#D65C5C', '#D6D6D6', '#8E8E8E', '#9ED065',
-    //         16        17         18         19         20         21         22        23
-           '#474700', '#7C2C00', '#86861D', '#69690F', '#BBBB35', '#75CCEB', '#75B5EF', '#355F18']
-
-let KEY_P = 80;
-
 let CC = {
+	collide: function(obj1, obj2) {
+		return (obj1.x+obj1.w>obj2.x && obj1.x<obj2.x+obj2.w
+			&& obj1.y+obj1.h>obj2.screenY && obj1.y<obj2.screenY+obj2.h);
+	},
+
+	KEY_P: 80,
+
+	/*
+	0-null, 1-airplane, 2-bottom, 3-water, (4-propeller, 5-body, 6-middle), (7-cabin, 8-deck, 9-hull),
+	(10-base, 11-asphalt, (1-banner), (12-fuel, 13-white), 14-panel, (1)-letters, ((13-Wall),
+	15-tree, 16-trunk), (17-support, 18-board1- 19-board2, (1-banner),(13-shot))
+	*/
+	clr:
+		//     0      1-yellow      2           3          4          5          6         7
+		[  '#000000', '#E8E84A', '#6E9C42', '#2D32B8', '#D2A44A', '#004030', '#000089', '#000000',
+    	//     8          9          10        11         12         13          14        15   
+           '#A33915', '#54A0C5', '#6F6F6F', '#AAAAAA', '#D65C5C', '#D6D6D6', '#8E8E8E', '#9ED065',
+    	//     16        17         18         19         20         21         22        23
+           '#474700', '#7C2C00', '#86861D', '#69690F', '#BBBB35', '#75CCEB', '#75B5EF', '#355F18'],
+
 	bridgeData: {x: 295, y: 2629},
+
+    // indexes into shapes array - easier than using #s
+    eShape: {
+        PLANE: 0, PLANE_LEFT: 1, PLANE_RIGHT: 2, HELI_RIGHT0: 3, HELI_RIGHT1: 4,
+        HELI_LEFT0: 5, HELI_LEFT1: 6, SHIP_RIGHT: 7, SHIP_LEFT: 8, AIRPLANE_E: 9,
+        AIRPLANE_D: 10, FUEL: 11, EXPL1:12, EXPL2: 13, HOME: 14
+    },
+
+	plane:
+	[
+		[[0, 0, 0, 1, 0, 0, 0], // 0 plane -> array of color values
+        [0, 0, 0, 1, 0, 0, 0],  //  indexed into clr array in color.js
+        [0, 0, 0, 1, 0, 0, 0],  // plane is 7 pixels wide x 14 pixels tall
+        [0, 0, 1, 1, 1, 0, 0],  // show(..) draw image to fit specified w (width) & h (height)!
+        [0, 1, 1, 1, 1, 1, 0],
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 0, 1, 0, 1, 1],
+        [1, 0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 1, 1, 1, 0, 0],
+        [0, 1, 1, 1, 1, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 1, 0]],
+	
+        [[0, 0, 0, 1, 0, 0, 0],  // 1 plane left
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0, 0],
+        [0, 1, 1, 1, 1, 0, 0],
+        [0, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 0],
+        [0, 1, 0, 1, 1, 1, 0],
+        [0, 0, 0, 1, 0, 1, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0, 0],
+        [0, 1, 1, 1, 1, 0, 0],
+        [0, 1, 0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 1, 0]],
+	
+        [[0, 0, 0, 1, 0, 0, 0],  // 2 plane right
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0],
+        [0, 0, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0],
+        [0, 0, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 0, 1, 0],
+		[0, 1, 0, 0, 0, 0, 0]]
+	],
+
+	explosion:
+	[
+		[[0, 0, 0, 0, 0, 8, 0, 0],      // explosion 1
+		[0, 0, 0, 8, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 8, 0],
+		[8, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 6, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 1, 0, 4],
+		[0, 4, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 4, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 4, 0],
+		[9, 0, 0, 0, 1, 0, 0, 0],
+		[0, 0, 9, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 9, 0, 0]],
+
+		[[0, 0, 15, 0, 0, 0],           // explosion 2
+		[0, 0, 0, 0, 15, 0],
+		[15, 0, 0, 0, 0, 0],
+		[0, 0, 0, 15, 0, 0],
+		[0, 15, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 15],
+		[0, 0, 9, 0, 0, 0],
+		[0, 0, 0, 0, 9, 0]],
+	],
 
 	houseData: [
 		[	{x: 591, y:  275, img: "L"},	//idx 0 level 1->terrain/islands repeat->lvl001.png

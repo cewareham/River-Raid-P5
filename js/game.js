@@ -9,6 +9,12 @@ class Game {
 		this.houses= [];
 		this.bridges = [];
 		this.level = 0;
+		let planeWidth = 49,
+			planeHeight = 42,
+			planeX = Math.round(CC.bridgeData.x + CC.bridge.width/2 - planeWidth/2),
+			planeY = height - 60;
+		//                      x         y     width            height  shape#        out expl
+		this.plane = new Plane(planeX, planeY, planeWidth, planeHeight, CC.eShape.PLANE, 0, 0);
 		this.makeHouses(this.level, this.level+1);	// make level 1 houses/trees
 		this.makeBridges(0, 1);	// make level 1 bridges
 		this.scrollSpeed = this.bg.scrollSpeed;
@@ -26,7 +32,7 @@ class Game {
 		let yy = bd.y;
 		if (offset) yy -= offset*CC.tileHeight;
 		let img = CC.bridge;
-		this.bridges.push(new Bridge(xx, yy, img.width, img.height, img, offset));
+		this.bridges.push(new Bridge(xx, yy, img.width, img.height, img, offset, 0, 0));
 	}
 
 	replaceHouses = (idx) => {
@@ -52,10 +58,6 @@ class Game {
 		}
 	}
 
-	update() {
-		this.bg.update();
-	}
-
 	renderBridges = (dy) => {
 		for (let ii=0; ii<this.bridges.length; ii++) {
 			this.bridges[ii].update(dy);
@@ -69,22 +71,25 @@ class Game {
 			this.houses[ii].render();
 		}
 	}
+
+	update() {
+		this.bg.update();
+		this.plane.update();
+	}
   
 	render() {
+		let speed = 0;
 		if (keyIsDown(DOWN_ARROW)) {
-			this.bg.render(-this.scrollSpeed);
-			this.renderHouses(-this.scrollSpeed);
-			this.renderBridges(-this.scrollSpeed);
+			speed = -this.scrollSpeed;
 		}
 		else if (keyIsDown(UP_ARROW)) {
-			this.bg.render(this.scrollSpeed);
-			this.renderHouses(this.scrollSpeed);
-			this.renderBridges(this.scrollSpeed);
+			speed = this.scrollSpeed;
 		}
-		else {
-			this.renderHouses(0);
-			this.renderBridges(0);
-		}
+
+		this.bg.render(speed);
+		this.renderHouses(speed);
+		this.renderBridges(speed);
+		this.plane.render();
 	}
 
 	centerCanvas() {
