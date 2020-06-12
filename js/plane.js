@@ -28,6 +28,12 @@ class Plane {
     }
 
     render() {
+        if (!this.out && CC.hitcolortest(this, CC.clr[2], CC.clr[24])) {
+            console.log("*** PLANE hit terrain ***");
+            this.t_expl = 40;
+            this.out = true;
+		}
+
         let clr = CC.clr;
         let obj = this.shape;
         let shapes = CC.plane;
@@ -52,6 +58,9 @@ class Plane {
                 }
             }
         }
-        if (this.t_expl) this.t_expl -= 1;
+        if (this.t_expl) {
+            this.t_expl--;
+            if (this.t_expl == 0) this.out = false;
+        }
     }
 }

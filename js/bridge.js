@@ -30,12 +30,19 @@ class Bridge {
 
 	update = (dy) => {
         this.y += dy;
-        if (!this.isFirstBridge() && this.collide(game.plane) && !this.out) {
-            this.t_expl = 40;
-            game.plane.t_expl = 40;
-            this.out = true;
-            console.log("Plane collided with Bridge");    
-        } 
+        if (!this.isFirstBridge()) {
+            if (this.collide(game.plane) && !this.out) {
+                this.t_expl = 40;
+                game.plane.t_expl = 40;
+                this.out = true;
+                console.log("Plane collided with Bridge");    
+            } else if (this.collide(game.shot) && !this.out && game.shot.y >=0) {
+                this.t_expl = 40;
+                this.out = true;
+                game.shot.y = -100;
+                console.log("Shot collided with Bridge");
+            }
+        }
 	}
 
 	render = () => {

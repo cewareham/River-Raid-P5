@@ -123,9 +123,9 @@ class Background {
 		let row2 = this.toInt(mm / this.tileHeight);
 
 		image(this.tiles[row][col], xOff, yOff);
-		image(this.tiles[row][col2], xOff + this.tileWidth, yOff);
+		//image(this.tiles[row][col2], xOff + this.tileWidth, yOff);
 		image(this.tiles[row2][col], xOff, yOff + this.tileHeight);
-		image(this.tiles[row2][col2], xOff + this.tileWidth, yOff + this.tileHeight);
+		//image(this.tiles[row2][col2], xOff + this.tileWidth, yOff + this.tileHeight);
 	}
 
 	realUpdate = () => {

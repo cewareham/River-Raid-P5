@@ -31,6 +31,19 @@ function draw() {
 	game.render();
 }
 
+// check canvas pixel color when mouse pressed
+function mousePressed() {
+	let pixelData,
+		mX = mouseX,
+		mY = mouseY;
+
+	let pixelD1 = get(mX, mY);
+	let pixelD2 = drawingContext.getImageData(mX, mY, 1, 1).data;
+	pixelData = pixelD1;
+	let pixelHex = '#' + CC.rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+	document.getElementById('status').innerHTML = "(" + mX + "," + mY + ")->" + pixelData + "->" + pixelHex;
+}
+
 // center the canvas whenever the browser changes size
 function windowResized() {
 	game.centerCanvas();

@@ -13,6 +13,7 @@ class Game {
 			planeHeight = 42,
 			planeX = Math.round(CC.bridgeData.x + CC.bridge.width/2 - planeWidth/2),
 			planeY = height - 60;
+		this.shot = new Shot(false, 0, 1);
 		//                      x         y     width            height  shape#        out expl
 		this.plane = new Plane(planeX, planeY, planeWidth, planeHeight, CC.eShape.PLANE, 0, 0);
 		this.makeHouses(this.level, this.level+1);	// make level 1 houses/trees
@@ -75,6 +76,7 @@ class Game {
 	update() {
 		this.bg.update();
 		this.plane.update();
+		this.shot.update();
 	}
   
 	render() {
@@ -90,6 +92,7 @@ class Game {
 		this.renderHouses(speed);
 		this.renderBridges(speed);
 		this.plane.render();
+		this.shot.render(round(game.plane.x + game.plane.w/2), round(game.plane.y + game.plane.h/2));
 	}
 
 	centerCanvas() {

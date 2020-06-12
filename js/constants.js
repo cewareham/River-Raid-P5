@@ -1,6 +1,5 @@
 "use strict";
 
-
 // final name for game: #1-River Blitz, #2-River Assault or #3-Stream Attack
 
 let CC = {
@@ -9,6 +8,34 @@ let CC = {
 			&& obj1.y+obj1.h>obj2.screenY && obj1.y<obj2.screenY+obj2.h);
 	},
 
+	// need 2 clr values because have 2 terrain colors to test-ltgreen & dkgreen
+	hitcolortest: function(obj, clr1, clr2) {
+		// clr format is eg. "#6E9C42"
+		// p5.js get(x, y) returns color value format eg. [45, 50, 184, 255]->rgba array
+		// so must convert get(x, y) value to clr format with p5.js hex(..) function below
+		if (obj.x >= 0 && obj.x + obj.w <= width && obj.y >= 0 && obj.y + obj.h <= height) {
+			for (let ii=0; ii<floor(obj.w); ii++) {
+				for (let jj=0; jj<floor(obj.h); jj++) {
+					if ((!ii && (!jj || jj == floor(obj.h) - 1)) || !jj && ii == floor(obj.w) - 1) {
+						let pixelData = get(floor(obj.x + ii), floor(obj.y + jj));
+						let pixelHex = '#' + this.rgbToHex( pixelData[0], pixelData[1], pixelData[2] );
+						//let pixelHex = '#' + hex(pixelData[0], 2) + hex(pixelData[1], 2) + hex(pixelData[2], 2);
+						//console.log("canvasColor = " + canvasColor, obj.x+ii, obj.y+jj);
+						//document.getElementById('status').innerHTML = "(" + obj.x + "," + obj.y + ")->" + pixelData + "->" + pixelHex;
+						if (pixelHex == clr1 || pixelHex == clr2) return true;
+					}
+				}
+			}
+		}
+		return false;
+	},		
+
+	rgbToHex: function(r, g, b) {
+		// if (r > 255 || g > 255 || b > 255)
+		// 	throw "Invalid color component";
+		return ((r << 16) | (g << 8) | b).toString(16).toUpperCase();
+	},
+	
 	KEY_P: 80,
 
 	/*
@@ -17,12 +44,18 @@ let CC = {
 	15-tree, 16-trunk), (17-support, 18-board1- 19-board2, (1-banner),(13-shot))
 	*/
 	clr:
-		//     0      1-yellow      2           3          4          5          6         7
+		//     0      1-yellow      2-lt green   3          4          5          6         7
 		[  '#000000', '#E8E84A', '#6E9C42', '#2D32B8', '#D2A44A', '#004030', '#000089', '#000000',
     	//     8          9          10        11         12         13          14        15   
            '#A33915', '#54A0C5', '#6F6F6F', '#AAAAAA', '#D65C5C', '#D6D6D6', '#8E8E8E', '#9ED065',
     	//     16        17         18         19         20         21         22        23
-           '#474700', '#7C2C00', '#86861D', '#69690F', '#BBBB35', '#75CCEB', '#75B5EF', '#355F18'],
+		   '#474700', '#7C2C00', '#86861D', '#69690F', '#BBBB35', '#75CCEB', '#75B5EF', '#355F18',
+		// 24-dkgreen
+		   '#355F18'],
+	
+	yellow: 0,		// plane color
+	ltgreen: 0,	// terrain color of repeating levels
+	dkgreen: 0,	// terrain color of non-repeating levels
 
 	bridgeData: {x: 295, y: 2629},
 
@@ -270,3 +303,6 @@ let CC = {
 			{x: 96, y: 2543, img: "R"}]
 	]
 };
+CC.yellow = CC.clr[1];
+CC.ltgreen = CC.clr[2];
+CC.dkgreen = CC.clr[24];
