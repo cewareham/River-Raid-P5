@@ -32,13 +32,14 @@ class Background {
 		this.imgs = imgs;
 		this.lastLevel = 2;
 		this.repeatLevel = 2;
-		this.maxLevel = Math.floor(CC.houseData.length/2) + 1;
-		this.levelName = "assets/lvl";
-		this.levelExt = ".png";
+		//this.maxLevel = Math.floor(CC.houseData.length/2) + 1;
+		this.maxLevel = CC.maps.length;
+		//this.levelName = "assets/lvl";
+		//this.levelExt = ".png";
 		this.update = this.nullUpdate;
 		this.render = this.nullRender;
 		this.horizontalTiles = horizontalTiles;
-		this.scrollSpeed = 5;           // scrolling speed
+		this.scrollSpeed = 7;           // scrolling speed
 
 		this.top = 0;                   // stagePosY y-coord to display top of image @ top of canvas
 		this.bottom = -height;          // stagePosY y-coord to display bottom of image @ bottom of canvas
@@ -123,9 +124,9 @@ class Background {
 		let row2 = this.toInt(mm / this.tileHeight);
 
 		image(this.tiles[row][col], xOff, yOff);
-		//image(this.tiles[row][col2], xOff + this.tileWidth, yOff);
+		image(this.tiles[row][col2], xOff + this.tileWidth, yOff);
 		image(this.tiles[row2][col], xOff, yOff + this.tileHeight);
-		//image(this.tiles[row2][col2], xOff + this.tileWidth, yOff + this.tileHeight);
+		image(this.tiles[row2][col2], xOff + this.tileWidth, yOff + this.tileHeight);
 	}
 
 	realUpdate = () => {
@@ -136,12 +137,18 @@ class Background {
 				let idx1 = this.repeatLevel-1;	// non-repeated level
 				let idx2 = this.repeatLevel;	// repeated level
 				game.makeHouses(idx1, idx2);	// load house info for both levels because we need array init
-				console.log("*** NEW LEVEL repeatLevel makeHouses()");
+				game.makeFuel(idx1, idx2);
+				game.makeBoats(idx1, idx2);
+				game.makeHelis(idx1, idx2);
+				console.log("*** NEW LEVEL repeatLevel makeHouses(), makeFuel(), makeBoats(), makeHelis()");
 				console.log("\n");
 				//game.replaceHouses(this.repeatLevel);
 				this.repeatLevel++;				// next level index into houseData
 			} else {	// this.repeatLevel >= CC.houseData.length -> wrap around to start for house data
 				game.makeHouses(CC.houseData.length-1, 0);
+				game.makeFuel(CC.fuelData.length-1, 0);
+				game.makeBoats(CC.boatData.length-1, 0);
+				game.makeHelis(CC.heliData.length-1, 0);
 				this.repeatLevel = 1;
 			 	console.log('!!! WRAPPING AROUND repeatLevel = !!!', this.repeatLevel);
 				console.log("\n");
@@ -157,7 +164,8 @@ class Background {
 				if (this.lastLevel > this.maxLevel) {
 					this.lastLevel = 2;		// wrap around to start for loading images
 				}
-				let path = this.levelName + String(this.lastLevel).padStart(3, '0') + this.levelExt;
+				//let path = this.levelName + String(this.lastLevel).padStart(3, '0') + this.levelExt;
+				let path = CC.maps[this.lastLevel-1];
 				console.log("Map " + this.lastLevel + " loaded->", path, "stagePosY = " + this.stagePosY);
 				this.tiles[0][0] = loadImage(path, this.newLevelLoaded);
 
@@ -170,6 +178,9 @@ class Background {
 		this.stagePosY = this.bottom;	// put bottom of loaded screen at bottom of canvas
 		this.scroll(0, 0);				// display loaded screen @ new pos
 		game.makeHouses(this.repeatLevel-1, this.repeatLevel);	// new houses
+		game.makeFuel(this.repeatLevel-1, this.repeatLevel);	// new fuels
+		game.makeBoats(this.repeatLevel-1, this.repeatLevel);	// new boats
+		game.makeHelis(this.repeatLevel-1, this.repeatLevel);	// new helicopters
 		game.bridges[0].y = CC.bridgeData.y;					// adjust bridge positions
 		game.bridges[1].y = CC.bridgeData.y - CC.tileHeight;
 		this.repeatLevel++;
@@ -196,6 +207,7 @@ class Background {
 	nullUpdate() {}
 
 	realRender = (dy) => {
+		background('blue');
 		this.scroll(0, dy);
 	}
 

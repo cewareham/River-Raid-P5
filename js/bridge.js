@@ -30,7 +30,7 @@ class Bridge {
 
 	update = (dy) => {
         this.y += dy;
-        if (!this.isFirstBridge()) {
+        if (!this.isFirstBridge() && this.onScreen()) {
             if (this.collide(game.plane) && !this.out) {
                 this.t_expl = 40;
                 game.plane.t_expl = 40;
