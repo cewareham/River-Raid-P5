@@ -26,6 +26,12 @@ class Game {
 		this.makeHelis(this.level, this.level+1);
 		this.makeBridges(0, 1);	// make level 1 bridges
 		this.scrollSpeed = this.bg.scrollSpeed;
+
+		this.minFuel = 0;
+		this.maxFuel = 166;		// pixel dist from 'E' fo 'F' indicators on hud image
+		this.fuel_level = this.maxFuel;
+		this.hud = new Hud("assets/hud.png", "assets/bullet.png", this.maxFuel);
+		this.centerCanvas();
 	}
 
 	//*** BEGIN Bridges code ***
@@ -156,9 +162,12 @@ class Game {
 	//*** END Helicopter code ***
 
 	update() {
+		this.fuel_level -= 0.1;
+		if (this.fuel_level < this.minFuel) this.fuel_level = this.minFuel;
 		this.bg.update();
 		this.plane.update();
 		this.shot.update();
+		this.hud.updateIndicator(this.fuel_level);
 	}
   
 	render() {
@@ -181,8 +190,10 @@ class Game {
 	}
 
 	centerCanvas() {
+		if (!this.hud) return;
 		var xx = (windowWidth - width) / 2;
-		var yy = (windowHeight - height) / 2;
+		var yy = (windowHeight - height - this.hud.hud.height) / 2;
 		this.canvas.position(xx, yy);
+		this.hud.update(this.fuel_level);
 	}
 }

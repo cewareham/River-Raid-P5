@@ -129,6 +129,14 @@ class Background {
 		image(this.tiles[row2][col2], xOff + this.tileWidth, yOff + this.tileHeight);
 	}
 
+	// make houses, fuel, boats & helicopters
+	makeObjects = (idx1, idx2) => {
+		game.makeHouses(idx1, idx2);
+		game.makeFuel(idx1, idx2);
+		game.makeBoats(idx1, idx2);
+		game.makeHelis(idx1, idx2);
+	}
+
 	realUpdate = () => {
 		// 1st (repeated) level off screen -> load new house data
 		if (this.stagePosY < -this.tileHeight-height && !this.repeatLevelDone) {
@@ -136,19 +144,13 @@ class Background {
 			if (this.repeatLevel < CC.houseData.length) {
 				let idx1 = this.repeatLevel-1;	// non-repeated level
 				let idx2 = this.repeatLevel;	// repeated level
-				game.makeHouses(idx1, idx2);	// load house info for both levels because we need array init
-				game.makeFuel(idx1, idx2);
-				game.makeBoats(idx1, idx2);
-				game.makeHelis(idx1, idx2);
+				this.makeObjects(idx1, idx2);	// load house, fuel, boats & helicopters for both levels because we need array init
 				console.log("*** NEW LEVEL repeatLevel makeHouses(), makeFuel(), makeBoats(), makeHelis()");
 				console.log("\n");
 				//game.replaceHouses(this.repeatLevel);
 				this.repeatLevel++;				// next level index into houseData
-			} else {	// this.repeatLevel >= CC.houseData.length -> wrap around to start for house data
-				game.makeHouses(CC.houseData.length-1, 0);
-				game.makeFuel(CC.fuelData.length-1, 0);
-				game.makeBoats(CC.boatData.length-1, 0);
-				game.makeHelis(CC.heliData.length-1, 0);
+			} else {	// this.repeatLevel >= CC.houseData.length -> wrap around to start for house, fuel, boat & helicopter data
+				this.makeObjects(CC.houseData.length-1, 0);
 				this.repeatLevel = 1;
 			 	console.log('!!! WRAPPING AROUND repeatLevel = !!!', this.repeatLevel);
 				console.log("\n");
@@ -177,10 +179,7 @@ class Background {
 	newLevelLoaded = () => {
 		this.stagePosY = this.bottom;	// put bottom of loaded screen at bottom of canvas
 		this.scroll(0, 0);				// display loaded screen @ new pos
-		game.makeHouses(this.repeatLevel-1, this.repeatLevel);	// new houses
-		game.makeFuel(this.repeatLevel-1, this.repeatLevel);	// new fuels
-		game.makeBoats(this.repeatLevel-1, this.repeatLevel);	// new boats
-		game.makeHelis(this.repeatLevel-1, this.repeatLevel);	// new helicopters
+		this.makeObjects(this.repeatLevel-1, this.repeatLevel);
 		game.bridges[0].y = CC.bridgeData.y;					// adjust bridge positions
 		game.bridges[1].y = CC.bridgeData.y - CC.tileHeight;
 		this.repeatLevel++;

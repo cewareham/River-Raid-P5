@@ -82,7 +82,7 @@ let CC = {
 	plane:
 	[
 		[[0, 0, 0, 1, 0, 0, 0], // 0 plane -> array of color values
-        [0, 0, 0, 1, 0, 0, 0],  //  indexed into clr array in color.js
+        [0, 0, 0, 1, 0, 0, 0],  //  indexed into clr array
         [0, 0, 0, 1, 0, 0, 0],  // plane is 7 pixels wide x 14 pixels tall
         [0, 0, 1, 1, 1, 0, 0],  // show(..) draw image to fit specified w (width) & h (height)!
         [0, 1, 1, 1, 1, 1, 0],
