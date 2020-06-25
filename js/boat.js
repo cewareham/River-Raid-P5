@@ -3,10 +3,10 @@
 // Boat class
 class Boat {
 	constructor(xx, yy, ww, hh, shape, index) {
-		this.xx = xx;
-		this.yy = yy;
-		this.ww = ww;
-		this.hh = hh;
+		this.x = xx;
+		this.y = yy;
+		this.w = ww;
+		this.h = hh;
 		this.shape = shape;
 		this.index = index;
 		this.dHeight = height - CC.tileHeight;
@@ -14,17 +14,17 @@ class Boat {
 
 	// is house y-coord on visible canvas?
 	onScreen = () => {
-		this.screenY = this.dHeight + this.yy;
+		this.screenY = this.dHeight + this.y;
 		return (this.screenY < height && this.screenY > -this.shape.height);
 	}
 
 	update = (dy) => {
-		this.yy += dy;
+		this.y += dy;
 	}
 
 	render = () => {
-		// this.screenY = this.dHeight + this.yy;
+		// this.screenY = this.dHeight + this.y;
 		if (this.onScreen())
-			image(this.shape, this.xx, this.screenY);
+			image(this.shape, this.x, this.screenY);
 	}
 }

@@ -10,6 +10,9 @@ function preload() {
 	CC.bridge = loadImage('assets/bridge.png');
 	CC.bridgeEx1 = loadImage('assets/bridgeEx1.png');
 	CC.bridgeEx2 = loadImage('assets/bridgeEx2.png');
+	CC.expl1 = loadImage('assets/expl1.png');
+	CC.expl2 = loadImage('assets/expl2.png');
+	CC.expl3 = loadImage('assets/expl3.png');
 	CC.fuel = loadImage('assets/fuel.png');
 	CC.boatLeft = loadImage('assets/boatLeft.png');
 	CC.boatRight = loadImage('assets/boatRight.png');

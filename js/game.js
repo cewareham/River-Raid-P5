@@ -100,7 +100,7 @@ class Game {
 			let yy = obj.y;
 			if (offset) yy -= offset*CC.tileHeight;
 			let img = CC.fuel;
-			this.fuels.push(new Fuel(xx, yy, img.width, img.height, img, ii));
+			this.fuels.push(new Fuel(xx, yy, img.width, img.height, img, ii, 0, 0));
 		}
 	}
 	renderFuel = (dy) => {
