@@ -30,7 +30,9 @@ class Game {
 		this.minFuel = 0;
 		this.maxFuel = 166;		// pixel dist from 'E' fo 'F' indicators on hud image
 		this.fuel_level = this.maxFuel;
-		this.hud = new Hud("assets/hud.png", "assets/bullet.png", this.maxFuel);
+		this.hud = new Hud("assets/hud.png", "assets/bullet.png", "assets/plane.png", this.maxFuel);
+		this.displayMsg = "River Raid P5";	// msg to display in hud
+		this.score = 10235;
 		this.centerCanvas();
 	}
 
@@ -168,6 +170,8 @@ class Game {
 		this.plane.update();
 		this.shot.update();
 		this.hud.updateIndicator(this.fuel_level);
+		this.hud.displayMsg(this.displayMsg);
+		this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
 	}
   
 	render() {

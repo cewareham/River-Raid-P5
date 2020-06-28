@@ -33,7 +33,9 @@ class Fuel {
 			console.log("Plane collided with Fuel");
 			game.fuel_level += 0.4;
 			if (game.fuel_level > game.maxFuel) game.fuel_level = game.maxFuel;
-		} else if (this.collide(game.shot) && !this.out && game.shot.y >=0) {
+		}
+		
+		if (this.collide(game.shot) && !this.out && game.shot.y >=0) {
 			this.t_expl = 60;
 			this.out = true;
 			game.shot.y = -100;

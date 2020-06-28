@@ -4,6 +4,7 @@ let game;
 
 function preload() {
 	// CC object in constants.js
+	CC.fntCB = loadFont('assets/CooperBlackRegular.ttf');
 	CC.houseLeft = loadImage('assets/houseLeft.png');
 	CC.houseRight = loadImage('assets/houseRight.png');
 	CC.map001 = loadImage('assets/map001.png');

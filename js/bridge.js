@@ -35,6 +35,9 @@ class Bridge {
                 this.t_expl = 40;
                 game.plane.t_expl = 40;
                 this.out = true;
+                game.hud.lives--;
+                if (game.hud.lives < 0) game.hud.lives = 0;
+                game.hud.updateLives();
                 console.log("Plane collided with Bridge");    
             } else if (this.collide(game.shot) && !this.out && game.shot.y >=0) {
                 this.t_expl = 40;
