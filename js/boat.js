@@ -12,7 +12,7 @@ class Boat {
 		this.dHeight = height - CC.tileHeight;
 	}
 
-	// is house y-coord on visible canvas?
+	// is boat y-coord on visible canvas?
 	onScreen = () => {
 		this.screenY = this.dHeight + this.y;
 		return (this.screenY < height && this.screenY > -this.shape.height);

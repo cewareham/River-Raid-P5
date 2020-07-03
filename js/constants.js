@@ -13,6 +13,7 @@ let CC = {
 		// clr format is eg. "#6E9C42"
 		// p5.js get(x, y) returns color value format eg. [45, 50, 184, 255]->rgba array
 		// so must convert get(x, y) value to clr format with p5.js hex(..) function below
+		//*** ONLY check if obj is on canvas ***
 		if (obj.x >= 0 && obj.x + obj.w <= width && obj.y >= 0 && obj.y + obj.h <= height) {
 			for (let ii=0; ii<floor(obj.w); ii++) {
 				for (let jj=0; jj<floor(obj.h); jj++) {

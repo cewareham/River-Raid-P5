@@ -21,7 +21,7 @@ class Fuel {
         return false;
     }
 
-	// is house y-coord on visible canvas?
+	// is fuel y-coord on visible canvas?
 	onScreen = () => {
 		this.screenY = this.dHeight + this.y;
 		return (this.screenY < height && this.screenY > -this.shape.height);

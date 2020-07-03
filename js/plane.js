@@ -14,6 +14,14 @@ class Plane {
         this.t_expl = t_expl;
     }
 
+    losePlane = () => {
+        this.t_expl = 40;
+        this.out = true;
+        game.hud.lives--;
+        if (game.hud.lives < 0) game.hud.lives = 0;
+        game.hud.updateLives();
+    }
+
     update() {
         // move plane left & right with arrow keys
         this.shape = CC.eShape.PLANE;
@@ -30,8 +38,7 @@ class Plane {
     render() {
         if (!this.out && CC.hitcolortest(this, CC.clr[2], CC.clr[24])) {
             console.log("*** PLANE hit terrain ***");
-            this.t_expl = 40;
-            this.out = true;
+            this.losePlane();
 		}
 
         let clr = CC.clr;

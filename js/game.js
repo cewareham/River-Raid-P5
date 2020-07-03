@@ -31,9 +31,10 @@ class Game {
 		this.maxFuel = 166;		// pixel dist from 'E' fo 'F' indicators on hud image
 		this.fuel_level = this.maxFuel;
 		this.hud = new Hud("assets/hud.png", "assets/bullet.png", "assets/plane.png", this.maxFuel);
-		this.displayMsg = "River Raid P5";	// msg to display in hud
+		this.displayMsg = "River Blitz P5";	// msg to display in hud
 		this.score = 10235;
 		this.centerCanvas();
+		this.updateRenderOn();
 	}
 
 	//*** BEGIN Bridges code ***
@@ -151,8 +152,9 @@ class Game {
 			let xx = obj.x;
 			let yy = obj.y;
 			if (offset) yy -= offset*CC.tileHeight;
-			let img = (ii%2==0 ? CC.heliLeft1 : CC.heliRight1);
-			this.helis.push(new Heli(xx, yy, img.width, img.height, img, ii));
+			let dir = (ii%2==0 ? "Left" : "Right");
+			let imgNum = 1;
+			this.helis.push(new Heli(xx, yy, dir, imgNum, ii, 0, 0));
 		}
 	}
 	renderHelis = (dy) => {
@@ -163,7 +165,7 @@ class Game {
 	}
 	//*** END Helicopter code ***
 
-	update() {
+	realUpdate() {
 		this.fuel_level -= 0.1;
 		if (this.fuel_level < this.minFuel) this.fuel_level = this.minFuel;
 		this.bg.update();
@@ -174,7 +176,7 @@ class Game {
 		this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
 	}
   
-	render() {
+	realRender() {
 		let speed = 0;
 		if (keyIsDown(DOWN_ARROW)) {
 			speed = -this.scrollSpeed;
@@ -191,6 +193,18 @@ class Game {
 		this.renderHelis(speed);
 		this.plane.render();
 		this.shot.render(round(game.plane.x + game.plane.w/2), round(game.plane.y + game.plane.h/2));
+	}
+
+	nullUpdate = () => { }
+	nullRender = () => { }
+
+	updateRenderOff = () => {
+		this.render = this.nullRender;
+		this.update = this.nullUpdate;
+	}
+	updateRenderOn = () => {
+		this.render = this.realRender;
+		this.update = this.realUpdate;
 	}
 
 	centerCanvas() {

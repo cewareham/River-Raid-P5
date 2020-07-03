@@ -34,10 +34,6 @@ class Background {
 		this.repeatLevel = 2;
 		//this.maxLevel = Math.floor(CC.houseData.length/2) + 1;
 		this.maxLevel = CC.maps.length;
-		//this.levelName = "assets/lvl";
-		//this.levelExt = ".png";
-		this.update = this.nullUpdate;
-		this.render = this.nullRender;
 		this.horizontalTiles = horizontalTiles;
 		this.scrollSpeed = 7;           // scrolling speed
 
@@ -56,7 +52,6 @@ class Background {
 
 	setTiles = (tiles) => {
 		this.numLoaded = 0;                 // no imgs loaded yet
-		//this.render = this.nullRender;      // pause rendering until imgs loaded
 		this.updateRenderOff();
 		if (typeof tiles === 'string') {    // img=single path/filename string
 			this.numImgs = 1;
@@ -137,8 +132,13 @@ class Background {
 		game.makeHelis(idx1, idx2);
 	}
 
-	realUpdate = () => {
-		// 1st (repeated) level off screen -> load new house data
+	render = (dy) => {
+		//background('blue');
+		this.scroll(0, dy);
+	}
+
+	update = () => {
+			// 1st (repeated) level off screen -> load new house data
 		if (this.stagePosY < -this.tileHeight-height && !this.repeatLevelDone) {
 			// don't go beyond CC.houseData array bounds
 			if (this.repeatLevel < CC.houseData.length) {
@@ -177,8 +177,12 @@ class Background {
 	}
 
 	newLevelLoaded = () => {
-		this.stagePosY = this.bottom;	// put bottom of loaded screen at bottom of canvas
+		//this.stagePosY = this.bottom;	// put bottom of loaded screen at bottom of canvas
+		//let delta = this.stagePosY + 2 * 2692 + 600;
+		//this.stagePosY = delta - 600;
+		this.stagePosY += 2 * CC.tileHeight;
 		this.scroll(0, 0);				// display loaded screen @ new pos
+		console.log("stagePosY = " + this.stagePosY);
 		this.makeObjects(this.repeatLevel-1, this.repeatLevel);
 		game.bridges[0].y = CC.bridgeData.y;					// adjust bridge positions
 		game.bridges[1].y = CC.bridgeData.y - CC.tileHeight;
@@ -189,25 +193,16 @@ class Background {
 		this.updateRenderOn();
 	}
 
-	updateRenderOff = () => {
-		this.update = this.nullUpdate;
-		this.render = this.nullRender;
-	}
-
-	updateRenderOn = () => {
-		this.update = this.realUpdate;
-		this.render = this.realRender;
-	}
-
 	// call the do-nothing render until all
 	//  image(s) loaded then call realRender
-	nullRender() {}
+	// MUST turn ALL updating/rendering off in game class
+	updateRenderOff = () => {
+		if (game) game.updateRenderOff();
+	}
 
-	nullUpdate() {}
-
-	realRender = (dy) => {
-		background('blue');
-		this.scroll(0, dy);
+	// turn ALL normal updating/rendering on in game class
+	updateRenderOn = () => {
+		if (game) game.updateRenderOn();
 	}
 
 	// python's true modulo NOT JS' remainder
@@ -221,6 +216,6 @@ class Background {
 			var x = parseInt(obj, 10);
 			if (!isNaN(x)) return x;
 		}
-		return toInt(def, 0);
+		return this.toInt(def, 0);
 	}
 }
