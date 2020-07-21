@@ -34,7 +34,8 @@ class Heli {
 				this.shapeNum = !this.shapeNum;
 				this.shape = CC["heli"+this.strDir+(this.shapeNum+1)];
 			}
-			this.x += this.dir;
+			// only move horizontally if plane is close
+			if (this.screenY > game.plane.y-220) this.x += this.dir;
 			let tempY = this.y;
 			this.y = this.screenY;
 			let hitColor = CC.hitcolortest(this, CC.clr[2], CC.clr[24]);
@@ -43,8 +44,7 @@ class Heli {
 				if (this.dir == 1) {
 					this.dir = -1;
 					this.strDir = "Left";
-				}
-				else {
+				} else {
 					this.dir = 1;
 					this.strDir = "Right";
 				}
@@ -59,6 +59,7 @@ class Heli {
 				this.t_expl = 40;
 				this.out = true;
 				game.plane.losePlane();
+				console.log("Plane collided with Heli");
 			}
 		}
 	}

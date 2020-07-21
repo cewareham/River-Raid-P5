@@ -127,8 +127,10 @@ class Game {
 			let xx = obj.x;
 			let yy = obj.y;
 			if (offset) yy -= offset*CC.tileHeight;
-			let img = (ii%2==0 ? CC.boatLeft : CC.boatRight);
-			this.boats.push(new Boat(xx, yy, img.width, img.height, img, ii));
+			let dir = (ii%2==0 ? "Left" : "Right");
+
+			//let img = (ii%2==0 ? CC.boatLeft : CC.boatRight);
+			this.boats.push(new Boat(xx, yy, dir, ii, 0, 0));
 		}
 	}
 	renderBoats = (dy) => {

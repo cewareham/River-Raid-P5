@@ -35,7 +35,7 @@ class Background {
 		//this.maxLevel = Math.floor(CC.houseData.length/2) + 1;
 		this.maxLevel = CC.maps.length;
 		this.horizontalTiles = horizontalTiles;
-		this.scrollSpeed = 7;           // scrolling speed
+		this.scrollSpeed = 5;           // scrolling speed
 
 		this.top = 0;                   // stagePosY y-coord to display top of image @ top of canvas
 		this.bottom = -height;          // stagePosY y-coord to display bottom of image @ bottom of canvas
