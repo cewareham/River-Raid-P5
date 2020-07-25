@@ -11,6 +11,7 @@ class Game {
 		this.bridges = [];
 		this.fuels = [];
 		this.boats = [];
+		this.jets = [];
 		this.helis = [];
 		this.level = 0;
 		let planeWidth = 49,
@@ -23,6 +24,7 @@ class Game {
 		this.makeHouses(this.level, this.level+1);	// make level 1 houses/trees
 		this.makeFuel(this.level, this.level+1);
 		this.makeBoats(this.level, this.level+1);
+		this.makeJets(this.level, this.level+1);
 		this.makeHelis(this.level, this.level+1);
 		this.makeBridges(0, 1);	// make level 1 bridges
 		this.scrollSpeed = this.bg.scrollSpeed;
@@ -88,7 +90,6 @@ class Game {
 	}
 	//*** END Houses code ***
 
-
 	//*** BEGIN Fuel code ***
 	makeFuel = (idx1, idx2) => {
 		this.fuels = [];
@@ -113,6 +114,33 @@ class Game {
 		}
 	}
 	//*** END Fuel code ***
+
+	//*** BEGIN Jet code ***
+	makeJets = (idx1, idx2) => {
+		this.jets = [];
+		this.newJets(idx1, 0);
+		this.newJets(idx2, 1);
+	}
+	newJets = (idx, offset) => {
+		let jd = CC.jetData[idx];
+		for (let ii=0; ii<jd.length; ii++) {
+			let obj = jd[ii];
+			let xx = obj.x;
+			let yy = obj.y;
+			if (offset) yy -= offset*CC.tileHeight;
+			let dir = (ii%2==0 ? "Left" : "Right");
+
+			//let img = (ii%2==0 ? CC.boatLeft : CC.boatRight);
+			this.jets.push(new Jet(xx, yy, dir, ii, 0, 0));
+		}
+	}
+	renderJets = (dy) => {
+		for (let ii=0; ii<this.jets.length; ii++) {
+			this.jets[ii].update(dy);
+			this.jets[ii].render();
+		}
+	}
+	//*** END Jet code ***
 
 	//*** BEGIN Boat code ***
 	makeBoats = (idx1, idx2) => {
@@ -192,6 +220,7 @@ class Game {
 		this.renderBridges(speed);
 		this.renderFuel(speed);
 		this.renderBoats(speed);
+		this.renderJets(speed);
 		this.renderHelis(speed);
 		this.plane.render();
 		this.shot.render(round(game.plane.x + game.plane.w/2), round(game.plane.y + game.plane.h/2));

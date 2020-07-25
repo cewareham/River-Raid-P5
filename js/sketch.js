@@ -21,6 +21,8 @@ function preload() {
 	CC.heliLeft2 = loadImage('assets/heliLeft2.png');
 	CC.heliRight1 = loadImage('assets/heliRight1.png');
 	CC.heliRight2 = loadImage('assets/heliRight2.png');
+	CC.jetLeft = loadImage('assets/jetLeft.png');
+	CC.jetRight = loadImage('assets/jetRight.png');
 }
 
 function setup() {

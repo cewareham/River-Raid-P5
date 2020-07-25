@@ -14,6 +14,7 @@ class Boat {
 		this.dHeight = height - CC.tileHeight;
 		this.out = out;
 		this.t_expl = t_expl;
+		this.speed = 2;
 	}
 
 	// is boat y-coord on visible canvas?
@@ -26,7 +27,7 @@ class Boat {
 		this.y += dy;
 		if (this.onScreen()) {
 			// only move horizontally if plane is close
-			if (this.screenY > game.plane.y-220) this.x += this.dir;
+			if (this.screenY > game.plane.y-220) this.x += this.dir*this.speed;
 			let tempY = this.y;
 			this.y = this.screenY;
 			let hitColor = CC.hitcolortest(this, CC.clr[2], CC.clr[24]);
