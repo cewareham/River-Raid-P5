@@ -14,7 +14,7 @@ class Boat {
 		this.dHeight = height - CC.tileHeight;
 		this.out = out;
 		this.t_expl = t_expl;
-		this.speed = 2;
+		this.speed = 3;
 	}
 
 	// is boat y-coord on visible canvas?

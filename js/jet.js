@@ -14,7 +14,7 @@ class Jet {
 		this.dHeight = height - CC.tileHeight;
 		this.out = out;
 		this.t_expl = t_expl;
-		this.speed = 3
+		this.speed = 7;
 	}
 
 	// is jet y-coord on visible canvas?
@@ -26,8 +26,8 @@ class Jet {
 	update = (dy) => {
 		this.y += dy;
 		if (this.onScreen()) {
-			// only move horizontally if plane is close
-			if (this.screenY > game.plane.y-220) this.x += this.dir*this.speed;
+			// move horizontally as soon as on-screen
+			this.x += this.dir*this.speed;
 			if (this.x > width) this.x = -this.w;
 			else if (this.x < -this.w) this.x = width;
 			if (CC.collide(game.shot,  this) && !this.out && game.shot.y >=0) {

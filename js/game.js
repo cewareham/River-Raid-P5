@@ -14,8 +14,8 @@ class Game {
 		this.jets = [];
 		this.helis = [];
 		this.level = 0;
-		let planeWidth = 49,
-			planeHeight = 42,
+		let planeWidth = 38,//49,
+			planeHeight = 34,//42,
 			planeX = Math.round(CC.bridgeData.x + CC.bridge.width/2 - planeWidth/2),
 			planeY = height - 60;
 		this.shot = new Shot(false, 0, 1);

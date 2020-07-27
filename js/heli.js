@@ -17,7 +17,7 @@ class Heli {
 		this.propeller = 0;
 		this.out = out;
 		this.t_expl = t_expl;
-		this.speed = 2;
+		this.speed = 5;
 	}
 
 	// is heli y-coord on visible canvas?

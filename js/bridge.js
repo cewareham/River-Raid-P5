@@ -13,6 +13,7 @@ class Bridge {
         this.t_expl = t_expl;
         this.dHeight = height - CC.tileHeight;
         this.firstTime = true;
+        this.needBridge = false;
     }
 
     collide = (obj) => {
@@ -55,16 +56,22 @@ class Bridge {
                 if (this.t_expl > 20) img = CC.bridgeEx1;
                 else img = CC.bridgeEx2;
                 this.t_expl--;
-                if (this.t_expl == 0) this.out = false;
+                if (this.t_expl == 0) this.needBridge = true;
             }
 
-            if (this.onScreen()) {
-                image(img, this.x, this.screenY);
-            }        
+            if (this.onScreen()) {                      // only draw bridge if it's onscreen AND
+                if (!this.out || this.t_expl)           // its not out or it is out and there's explosion animation to finish
+                    image(img, this.x, this.screenY);
+            } else if (this.needBridge) {
+                // if bridge explosion done don't reset this.out until bridge is offscreen
+                // otherwise plane will explode/hit bridge after bridge blows up
+                this.out = false;
+                this.needBridge = false;
+            }
         }
     }
     
-    // is this the first bridge? don't draw it if it is
+    // don't draw 1st bridge (opening screen)
     isFirstBridge = () => {
         if (this.index == 0 && this.firstTime) {
             if (this.y > CC.tileHeight) {

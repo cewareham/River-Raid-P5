@@ -139,16 +139,16 @@ class Background {
 	}
 
 	update = () => {
-			// 1st (repeated) level off screen -> load new house data
+		// 1st (repeated) level off screen -> load new house data
 		if (this.stagePosY < -this.tileHeight-height && !this.repeatLevelDone) {
 			// don't go beyond CC.houseData array bounds
 			if (this.repeatLevel < CC.houseData.length) {
 				let idx1 = this.repeatLevel-1;	// non-repeated level
 				let idx2 = this.repeatLevel;	// repeated level
 				this.makeObjects(idx1, idx2);	// load house, fuel, boats & helicopters for both levels because we need array init
-				console.log("*** NEW LEVEL repeatLevel makeHouses(), makeFuel(), makeBoats(), makeHelis()");
-				console.log("\n");
-				//game.replaceHouses(this.repeatLevel);
+				//console.log(game.bridges[0].out, game.bridges[1].out);
+				// console.log("*** NEW LEVEL repeatLevel makeHouses(), makeFuel(), makeBoats(), makeHelis()");
+				// console.log("\n");
 				this.repeatLevel++;				// next level index into houseData
 			} else {	// this.repeatLevel >= CC.houseData.length -> wrap around to start for house, fuel, boat & helicopter data
 				this.makeObjects(CC.houseData.length-1, 0);
@@ -181,12 +181,14 @@ class Background {
 		//this.stagePosY = this.bottom;	// put bottom of loaded screen at bottom of canvas
 		//let delta = this.stagePosY + 2 * 2692 + 600;
 		//this.stagePosY = delta - 600;
+		let temp = this.stagePosY;
 		this.stagePosY += 2 * CC.tileHeight;
+		console.log(temp, this.stagePosY);
 		this.scroll(0, 0);				// display loaded screen @ new pos
 		console.log("stagePosY = " + this.stagePosY);
 		this.makeObjects(this.repeatLevel-1, this.repeatLevel);
-		game.bridges[0].y = CC.bridgeData.y;					// adjust bridge positions
-		game.bridges[1].y = CC.bridgeData.y - CC.tileHeight;
+		game.bridges[0].y = CC.bridgeData.y + (abs(this.stagePosY)-height);					// adjust bridge positions
+		game.bridges[1].y = CC.bridgeData.y - CC.tileHeight + (abs(this.stagePosY)-height);
 		this.repeatLevel++;
 
 		this.calledLoadImage = false;		// flag so we don't load image more than once
