@@ -7,7 +7,7 @@ class Shot {
         this.w = 5;
         this.h = 15;
         this.shooting = shooting;
-        this.speed = 20;
+        this.speed = 30;
     }
 
     update() {

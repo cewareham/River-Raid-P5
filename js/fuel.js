@@ -51,9 +51,10 @@ class Fuel {
 			else if (this.t_expl > 20) img = CC.expl2;
 			else img = CC.expl3;
 			this.t_expl--;
-			if (this.t_expl == 0) this.out = false;
 		}
-		if (this.onScreen())
-			image(img, this.x, this.screenY);
+		if (this.onScreen()) {                      // only draw if it's onscreen AND
+			if (!this.out || this.t_expl)           // its not out or it is out and there's explosion animation to finish
+				image(img, this.x, this.screenY);
+		}
 	}
 }

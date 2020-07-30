@@ -26,8 +26,8 @@ class Jet {
 	update = (dy) => {
 		this.y += dy;
 		if (this.onScreen()) {
-			// move horizontally as soon as on-screen
-			this.x += this.dir*this.speed;
+			// move horizontally as soon as on-screen but not if exploding
+			if (!this.t_expl) this.x += this.dir*this.speed;
 			if (this.x > width) this.x = -this.w;
 			else if (this.x < -this.w) this.x = width;
 			if (CC.collide(game.shot,  this) && !this.out && game.shot.y >=0) {
@@ -51,9 +51,10 @@ class Jet {
 			if (this.t_expl > 20) img = CC.expl1;
 			else img = CC.expl2;
 			this.t_expl--;
-			if (this.t_expl == 0) this.out = false;
 		}
-		if (this.onScreen())
-			image(img, this.x, this.screenY);
+		if (this.onScreen()) {                      // only draw if it's onscreen AND
+			if (!this.out || this.t_expl)           // its not out or it is out and there's explosion animation to finish
+				image(img, this.x, this.screenY);
+		}
 	}
 }

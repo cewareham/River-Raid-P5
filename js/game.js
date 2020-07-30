@@ -208,10 +208,10 @@ class Game {
   
 	realRender() {
 		let speed = 0;
-		if (keyIsDown(DOWN_ARROW)) {
-			speed = -this.scrollSpeed;
-		}
-		else if (keyIsDown(UP_ARROW)) {
+		// if (keyIsDown(DOWN_ARROW)) {
+		// 	speed = -this.scrollSpeed;
+		// }
+		if (keyIsDown(UP_ARROW)) {
 			speed = this.scrollSpeed;
 		}
 

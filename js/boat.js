@@ -26,8 +26,8 @@ class Boat {
 	update = (dy) => {
 		this.y += dy;
 		if (this.onScreen()) {
-			// only move horizontally if plane is close
-			if (this.screenY > game.plane.y-220) this.x += this.dir*this.speed;
+			// only move horizontally if plane is close & boat is not exploding
+			if (this.screenY > game.plane.y-220 && !this.t_expl) this.x += this.dir*this.speed;
 			let tempY = this.y;
 			this.y = this.screenY;
 			let hitColor = CC.hitcolortest(this, CC.clr[2], CC.clr[24]);
@@ -63,9 +63,10 @@ class Boat {
 			if (this.t_expl > 20) img = CC.expl1;
 			else img = CC.expl2;
 			this.t_expl--;
-			if (this.t_expl == 0) this.out = false;
 		}
-		if (this.onScreen())
-			image(img, this.x, this.screenY);
+		if (this.onScreen()) {                      // only draw if it's onscreen AND
+			if (!this.out || this.t_expl)           // its not out or it is out and there's explosion animation to finish
+				image(img, this.x, this.screenY);
+		}
 	}
 }

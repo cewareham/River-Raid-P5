@@ -9,7 +9,7 @@ class Plane {
         this.h = h;
         this.shape = shape; // index into CC.shapes (constants.js) 0 is plane, 1 plane left, etc.
         this.out = out;
-        this.horiz_speed = 2;
+        this.horiz_speed = 4;
 
         this.t_expl = t_expl;
     }
