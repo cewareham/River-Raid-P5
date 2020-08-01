@@ -204,6 +204,7 @@ class Game {
 		this.hud.updateIndicator(this.fuel_level);
 		this.hud.displayMsg(this.displayMsg);
 		this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
+		this.hud.updateLevel(1);
 	}
   
 	realRender() {

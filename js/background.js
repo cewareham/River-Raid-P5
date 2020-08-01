@@ -158,6 +158,8 @@ class Background {
 			}
 			game.bridges[0].y -= this.numImgs*CC.tileHeight;	// move 1st bridge up
 			this.repeatLevelDone = true;	// set flag so we don't do again until next level loaded
+			game.hud.level++;
+			game.hud.updateLevel();
 		}
 		// 2nd (non-repeated) level off screen -> load new level image & house data (in newLevelLoaded())
 		if (this.stagePosY < -this.numImgs*this.tileHeight-height && !this.calledLoadImage) {
@@ -174,6 +176,8 @@ class Background {
 
 				this.calledLoadImage = true;	// set to true so this code-block does not execute again until image loaded
 				this.repeatLevelDone = false;	// set to false so 1st-level-offscreen code (above) executes
+				game.hud.level++;
+				game.hud.updateLevel();
 		}
 	}
 

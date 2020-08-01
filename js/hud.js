@@ -11,6 +11,7 @@ class Hud {
         // gauge indicator graphic
         this.ind = createImg(indPath, "");
         this.ind.size(10, 28);
+        this.level = 1;
 
         // show lives with plane graphic
         this.maxLives = 3;
@@ -33,9 +34,17 @@ class Hud {
         this.msgDiv.style('color', CC.clr[1]);
         this.msgDiv.style('text-align', 'center');
 
+        // div for level display
+        this.levelDiv = createDiv();
+        this.levelDiv.size(this.hud.width/3, 50);
+        this.levelDiv.style('font-family', 'CooperBlackRegular');
+        this.levelDiv.style('font-size', '30px');
+        this.levelDiv.style('color', CC.clr[1]);
+        this.levelDiv.style('text-align', 'left');
+
         // div for score display
         this.scoreDiv = createDiv();
-        this.scoreDiv.size(this.hud.width/2, 50);
+        this.scoreDiv.size(this.hud.width/3, 50);
         this.scoreDiv.style('font-family', 'CooperBlackRegular');
         this.scoreDiv.style('font-size', '30px');
         this.scoreDiv.style('color', CC.clr[1]);
@@ -55,10 +64,15 @@ class Hud {
         this.update(this.maxFuel);  // start with full tank
     }
 
+    updateLevel = () => {
+        //this.level = level;
+        this.levelDiv.html("Level: " + this.level);
+        this.levelDiv.position(this.hudX+20, this.hudY);
+    }
+
     updateScore = (score) => {
         this.scoreDiv.html("Score: " + score);
-        this.scoreDiv.position(this.hudX+20, this.hudY);
-
+        this.scoreDiv.position(this.hudX+this.indLeft, this.hudY);
     }
 
     displayMsg = (msg) => {
@@ -84,7 +98,8 @@ class Hud {
         this.setHud();
         this.setIndicator(fuelLevel);
         this.updateLives();
-        this.updateScore();
+        //this.updateScore();
+        //this.updateLevel();
     }
 
     updateCoords = () => {
