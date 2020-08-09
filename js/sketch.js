@@ -33,6 +33,7 @@ function setup() {
 	// console.log('pixels' in CC.houseLeft);	// result -> true p5.js loadImage(..) returns a P5.Image object that has pixels field
 
 	CC.tileHeight = CC.map001.height;		// all map images should be same height
+	CC.lastLevel = CC.houseData.length;		// last level->ALL object data (fuel, helis, boats, etc.) must be same length
 	let canvas = createCanvas(800, 600);
 	game = new Game(canvas);
 }

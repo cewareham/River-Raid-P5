@@ -11,7 +11,7 @@ class Hud {
         // gauge indicator graphic
         this.ind = createImg(indPath, "");
         this.ind.size(10, 28);
-        this.level = 1;
+        this.level = 0;
 
         // show lives with plane graphic
         this.maxLives = 3;
@@ -62,10 +62,11 @@ class Hud {
         this.yy;
         this.firstTime = true;
         this.update(this.maxFuel);  // start with full tank
+        this.updateLevel(1);
     }
 
-    updateLevel = () => {
-        //this.level = level;
+    updateLevel = (dLevel) => {
+        this.level += dLevel;
         this.levelDiv.html("Level: " + this.level);
         this.levelDiv.position(this.hudX+20, this.hudY);
     }
@@ -98,8 +99,8 @@ class Hud {
         this.setHud();
         this.setIndicator(fuelLevel);
         this.updateLives();
-        //this.updateScore();
-        //this.updateLevel();
+        this.updateScore();
+        this.updateLevel(0);    // must update here or won't position level display correctly when resizing window
     }
 
     updateCoords = () => {

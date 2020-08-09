@@ -26,7 +26,7 @@ class Game {
 		this.makeBoats(this.level, this.level+1);
 		this.makeJets(this.level, this.level+1);
 		this.makeHelis(this.level, this.level+1);
-		this.makeBridges(0, 1);	// make level 1 bridges
+		this.makeBridges(0, 1);		// make level 1 bridges
 		this.scrollSpeed = this.bg.scrollSpeed;
 
 		this.minFuel = 0;
@@ -204,13 +204,51 @@ class Game {
 		this.hud.updateIndicator(this.fuel_level);
 		this.hud.displayMsg(this.displayMsg);
 		this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
-		this.hud.updateLevel(1);
+	}
+
+	resetObjects(level) {
+		let hd = CC.houseData[level-1];
+		for (let ii=0; ii<hd.length; ii++) {
+			this.houses[ii].x = hd[ii].x;
+			this.houses[ii].y = hd[ii].y;
+		}
+		hd = CC.houseData[level];
+		for (let ii=0; ii<hd.length; ii++) {
+			this.houses[ii].x = hd[ii].x;
+			this.houses[ii].y = hd[ii].y;
+		}
+	}
+
+	initPlaneToLevelBegin = () => {
+		this.bg.updateRenderOff();
+		let level = this.hud.level % CC.lastLevel;	// level we're on, will be 0 if on last level or any multiple of last level
+		let idx1 = level - 1;
+		let idx2 = level;
+		if (level == 0) {						// on last level, must wrap around
+			idx1 = CC.lastLevel-1;				// index for last level data
+			idx2 = 0;							// wrap around to 1st level
+		}
+		this.bg.makeObjects(idx1, idx2);		// make objects for this level
+		this.makeBridges(0, 1);					// make level 1 bridges
+		game.bridges[0].out = true;				// first bridge out->don't draw it because we start there
+
+		this.plane.x = this.plane.x0;			// update plane
+		this.plane.y = this.plane.y0;
+		this.plane.t_expl = 0;
+		this.plane.out = false;
+
+		let factor = level % 2;
+		if (factor == 0) factor = 2; 
+		this.bg.stagePosY = -((factor-1)*CC.tileHeight + height);
+		this.bg.stagePosX = 0;
+		this.bg.scroll(0, 0);					// display initial image
+		this.bg.updateRenderOn();
 	}
   
 	realRender() {
 		let speed = 0;
 		// if (keyIsDown(DOWN_ARROW)) {
-		// 	speed = -this.scrollSpeed;
+		// 	this.initPlaneToLevelBegin();
 		// }
 		if (keyIsDown(UP_ARROW)) {
 			speed = this.scrollSpeed;

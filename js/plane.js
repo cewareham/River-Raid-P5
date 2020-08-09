@@ -5,6 +5,8 @@ class Plane {
     constructor(x, y, w, h, shape, out, t_expl) {
         this.x = x;
         this.y = y;
+        this.x0 = x;    // org coord
+        this.y0 = y;    // org coord
         this.w = w;
         this.h = h;
         this.shape = shape; // index into CC.shapes (constants.js) 0 is plane, 1 plane left, etc.
@@ -67,7 +69,10 @@ class Plane {
         }
         if (this.t_expl) {
             this.t_expl--;
-            if (this.t_expl == 0) this.out = false;
+            if (this.t_expl == 0) {
+                game.initPlaneToLevelBegin();
+                this.out = false;
+            }
         }
     }
 }
