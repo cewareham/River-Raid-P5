@@ -37,7 +37,8 @@ let CC = {
 		return ((r << 16) | (g << 8) | b).toString(16).toUpperCase();
 	},
 	
-	KEY_P: 80,
+	KEY_P: 80,		// P key
+	KEY_F2: 113,	// F2 key
 
 	/*
 	0-null, 1-airplane, 2-bottom, 3-water, (4-propeller, 5-body, 6-middle), (7-cabin, 8-deck, 9-hull),

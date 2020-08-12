@@ -195,11 +195,12 @@ class Background {
 		this.stagePosY += 2 * CC.tileHeight;
 		console.log(temp, this.stagePosY);
 		this.scroll(0, 0);				// display loaded screen @ new pos
-		console.log("stagePosY = " + this.stagePosY);
+		//console.log("stagePosY = " + this.stagePosY);
+		let out = game.bridges[0].out;	// if bridge is out, user shot it & shouldn't draw after loading new level
 		this.makeObjects(this.repeatLevel-1, this.repeatLevel);
 		game.bridges[0].y = CC.bridgeData.y + (abs(this.stagePosY)-height);					// adjust bridge positions
 		game.bridges[1].y = CC.bridgeData.y - CC.tileHeight + (abs(this.stagePosY)-height);
-		game.bridges[0].out = false;
+		game.bridges[0].out = out;
 		game.bridges[1].out = false;
 		this.repeatLevel++;
 

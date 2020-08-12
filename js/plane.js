@@ -20,7 +20,10 @@ class Plane {
         this.t_expl = 40;
         this.out = true;
         game.hud.lives--;
-        if (game.hud.lives < 0) game.hud.lives = 0;
+        if (game.hud.lives < 0) {   // out of lives -> game over
+            game.hud.lives = 0;
+            game.moveToLevelOne();  // start over
+        }
         game.hud.updateLives();
     }
 
@@ -70,7 +73,7 @@ class Plane {
         if (this.t_expl) {
             this.t_expl--;
             if (this.t_expl == 0) {
-                game.initPlaneToLevelBegin();
+                game.moveToLevelBegin();    // draw plane @ beginning of level
                 this.out = false;
             }
         }

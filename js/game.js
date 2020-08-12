@@ -5,7 +5,6 @@ class Game {
 	constructor(canvas) {
 		this.canvas = canvas;
 		this.centerCanvas();
-		//this.bg = new Background(['assets/lvl002.png', 'assets/lvl001.png'], false);
 		this.bg = new Background([CC.maps[1], CC.maps[0]], false);
 		this.houses= [];
 		this.bridges = [];
@@ -33,8 +32,9 @@ class Game {
 		this.maxFuel = 166;		// pixel dist from 'E' fo 'F' indicators on hud image
 		this.fuel_level = this.maxFuel;
 		this.hud = new Hud("assets/hud.png", "assets/bullet.png", "assets/plane.png", this.maxFuel);
-		this.displayMsg = "River Blitz P5";	// msg to display in hud
-		this.score = 10235;
+		this.displayMsg = "River Blitz P5 - Press F2 to Start";	// msg to display in hud
+		this.score = 0;
+		this.play = false;			// flag->false, game not playing; -> true game is playing
 		this.centerCanvas();
 		this.updateRenderOn();
 	}
@@ -196,14 +196,20 @@ class Game {
 	//*** END Helicopter code ***
 
 	realUpdate() {
-		this.fuel_level -= 0.1;
-		if (this.fuel_level < this.minFuel) this.fuel_level = this.minFuel;
-		this.bg.update();
-		this.plane.update();
-		this.shot.update();
-		this.hud.updateIndicator(this.fuel_level);
-		this.hud.displayMsg(this.displayMsg);
-		this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
+		if (this.play) {
+			this.fuel_level -= 0.1;
+			if (this.fuel_level < this.minFuel) this.fuel_level = this.minFuel;
+			this.bg.update();
+			this.plane.update();
+			this.shot.update();
+			this.hud.updateIndicator(this.fuel_level);
+			this.hud.displayMsg(this.displayMsg);
+			this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
+		} else {
+			this.bg.update();
+			this.hud.displayMsg(this.displayMsg);
+			this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
+		}
 	}
 
 	resetObjects(level) {
@@ -219,8 +225,9 @@ class Game {
 		}
 	}
 
-	initPlaneToLevelBegin = () => {
-		this.bg.updateRenderOff();
+	// move to beginning of existing level
+	moveToLevelBegin = () => {		// called in plane.js -> render() -> near end of function
+		this.updateRenderOff();
 		let level = this.hud.level % CC.lastLevel;	// level we're on, will be 0 if on last level or any multiple of last level
 		let idx1 = level - 1;
 		let idx2 = level;
@@ -242,15 +249,35 @@ class Game {
 		this.bg.stagePosY = -((factor-1)*CC.tileHeight + height);
 		this.bg.stagePosX = 0;
 		this.bg.scroll(0, 0);					// display initial image
-		this.bg.updateRenderOn();
+		this.updateRenderOn();
 	}
-  
+
+	// load level 1 & move to beginning
+	moveToLevelOne = () => {
+		this.updateRenderOff();
+		this.bg = new Background([CC.maps[1], CC.maps[0]], false);
+		this.hud.level = 1;
+		game.hud.updateLevel(0);
+		this.moveToLevelBegin();
+		this.displayMsg = "Game Over - Press F2 to Play Again";
+		this.play = false;
+		game.hud.lives = game.hud.maxLives;
+		this.updateRenderOff();
+	}
+
 	realRender() {
+		if (!this.play) {
+			if (keyIsDown(CC.KEY_F2)) {
+				this.displayMsg = "River Blitz P5 Game On";	// msg to display in hud
+				this.play = true;
+			}
+		}
 		let speed = 0;
 		// if (keyIsDown(DOWN_ARROW)) {
-		// 	this.initPlaneToLevelBegin();
+		// 	this.moveToLevelOne();
+		// 	return;
 		// }
-		if (keyIsDown(UP_ARROW)) {
+		if (this.play && keyIsDown(UP_ARROW)) {
 			speed = this.scrollSpeed;
 		}
 
@@ -261,8 +288,10 @@ class Game {
 		this.renderBoats(speed);
 		this.renderJets(speed);
 		this.renderHelis(speed);
-		this.plane.render();
-		this.shot.render(round(game.plane.x + game.plane.w/2), round(game.plane.y + game.plane.h/2));
+		if (this.play) {
+			this.plane.render();
+			this.shot.render(round(game.plane.x + game.plane.w/2), round(game.plane.y + game.plane.h/2));
+		}
 	}
 
 	nullUpdate = () => { }
