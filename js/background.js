@@ -141,7 +141,7 @@ class Background {
 	}
 
 	render = (dy) => {
-		//background('blue');
+		background(CC.bgColor);
 		this.scroll(0, dy);
 	}
 

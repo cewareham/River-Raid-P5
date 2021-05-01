@@ -195,23 +195,6 @@ class Game {
 	}
 	//*** END Helicopter code ***
 
-	realUpdate() {
-		if (this.play) {
-			this.fuel_level -= 0.1;
-			if (this.fuel_level < this.minFuel) this.fuel_level = this.minFuel;
-			this.bg.update();
-			this.plane.update();
-			this.shot.update();
-			this.hud.updateIndicator(this.fuel_level);
-			this.hud.displayMsg(this.displayMsg);
-			this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
-		} else {
-			this.bg.update();
-			this.hud.displayMsg(this.displayMsg);
-			this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
-		}
-	}
-
 	resetObjects(level) {
 		let hd = CC.houseData[level-1];
 		for (let ii=0; ii<hd.length; ii++) {
@@ -252,7 +235,7 @@ class Game {
 		this.updateRenderOn();
 	}
 
-	// load level 1 & move to beginning
+	// load level 1 & move to beginning - start game over
 	moveToLevelOne = () => {
 		this.updateRenderOff();
 		this.bg = new Background([CC.maps[1], CC.maps[0]], false);
@@ -263,6 +246,23 @@ class Game {
 		this.play = false;
 		game.hud.lives = game.hud.maxLives;
 		this.updateRenderOff();
+	}
+
+	realUpdate() {
+		if (this.play) {
+			this.fuel_level -= 0.1;
+			if (this.fuel_level < this.minFuel) this.fuel_level = this.minFuel;
+			this.bg.update();
+			this.plane.update();
+			this.shot.update();
+			this.hud.updateIndicator(this.fuel_level);
+			this.hud.displayMsg(this.displayMsg);
+			this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
+		} else {
+			this.bg.update();
+			this.hud.displayMsg(this.displayMsg);
+			this.hud.updateScore(Math.round(this.fuel_level)/*this.score*/);
+		}
 	}
 
 	realRender() {

@@ -39,6 +39,6 @@ class Shot {
         }
         noStroke();
         fill(CC.clr[13]);
-        rect(this.x, this.y, this.w, this.h);
+        rect(this.x-4, this.y, this.w, this.h);
     }
 }

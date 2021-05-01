@@ -46,8 +46,8 @@ let CC = {
 	15-tree, 16-trunk), (17-support, 18-board1- 19-board2, (1-banner),(13-shot))
 	*/
 	clr:
-		//     0      1-yellow      2-lt green   3          4          5          6         7
-		[  '#000000', '#E8E84A', '#6E9C42', '#2D32B8', '#D2A44A', '#004030', '#000089', '#000000',
+		//     0      1-yellow   2-lt green   3-dk blue      4          5          6         7
+		[  '#000000', '#E8E84A', '#6E9C42',   '#2D32B8', '#D2A44A', '#004030', '#000089', '#000000',
     	//     8          9          10        11         12         13          14        15   
            '#A33915', '#54A0C5', '#6F6F6F', '#AAAAAA', '#D65C5C', '#D6D6D6', '#8E8E8E', '#9ED065',
     	//     16        17         18         19         20         21         22        23
@@ -55,9 +55,12 @@ let CC = {
 		// 24-dkgreen
 		   '#355F18'],
 	
-	yellow: 0,	// plane color
-	ltgreen: 0,	// terrain color of repeating levels
-	dkgreen: 0,	// terrain color of non-repeating levels
+	yellow: 0,		// plane color
+	ltgreen: 0,		// terrain color of repeating levels
+	dkgreen: 0,		// terrain color of non-repeating levels
+	waterblue: 0,	// color of water
+	flashred: '#ab1919',		// flash bg red when bridge blows up
+	bgColor: 0,		// background color-used in Background class->render()
 
 	bridgeData: {x: 295, y: 2629},
 
@@ -888,4 +891,6 @@ let CC = {
 };
 CC.yellow = CC.clr[1];
 CC.ltgreen = CC.clr[2];
+CC.waterblue = CC.clr[3];
 CC.dkgreen = CC.clr[24];
+CC.bgColor = CC.waterblue;

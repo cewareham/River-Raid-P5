@@ -30,6 +30,15 @@ class Bridge {
 	}
 
 	update = (dy) => {
+        let ii = 1;
+        let blinkLoop = function() {
+            CC.bgColor = (ii % 2 == 0) ? CC.flashred : CC.waterblue;
+            setTimeout(function () {			
+                ii++;
+                if (ii < 10) blinkLoop();
+                else CC.bgColor = CC.waterblue;
+            }, 50);
+        };
         this.y += dy;
         if (!this.isFirstBridge() && this.onScreen()) {
             if (this.collide(game.plane) && !this.out) {
@@ -39,15 +48,17 @@ class Bridge {
                 game.hud.lives--;
                 if (game.hud.lives < 0) game.hud.lives = 0;
                 game.hud.updateLives();
-                console.log("Plane collided with Bridge");    
+                console.log("Plane collided with Bridge");
+                blinkLoop();
             } else if (this.collide(game.shot) && !this.out && game.shot.y >=0) {
                 this.t_expl = 40;
                 this.out = true;
                 game.shot.y = -100;
                 console.log("Shot collided with Bridge");
+                blinkLoop();
             }
         }
-	}
+    }
 
 	render = () => {
         let img = this.shape;

@@ -14,6 +14,7 @@ class Plane {
         this.horiz_speed = 4;
 
         this.t_expl = t_expl;
+        this.restart = false;
     }
 
     losePlane = () => {
@@ -22,7 +23,7 @@ class Plane {
         game.hud.lives--;
         if (game.hud.lives < 0) {   // out of lives -> game over
             game.hud.lives = 0;
-            game.moveToLevelOne();  // start over
+            this.restart = true;    // checked near end of render() below
         }
         game.hud.updateLives();
     }
@@ -73,7 +74,10 @@ class Plane {
         if (this.t_expl) {
             this.t_expl--;
             if (this.t_expl == 0) {
-                game.moveToLevelBegin();    // draw plane @ beginning of level
+                if (this.restart) {
+                    game.moveToLevelOne();          // start over
+                    this.restart = false;
+                } else game.moveToLevelBegin();     // draw plane @ beginning of level
                 this.out = false;
             }
         }
